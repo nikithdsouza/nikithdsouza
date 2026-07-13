@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Artemis — a field maintenance technician iOS app. Portfolio case study by Nikith D'Souza.">
+<title>Artemis — Technician App Case Study</title>
+<style>
+  :root{
+    --canvas:#f4f4f5;
+    --surface:#ffffff;
+    --band:#f1f1f3;
+    --ink:#17171a;
+    --muted:#6c6c74;
+    --faint:#9a9aa3;
+    --line:#e6e6ea;
+    --card:#f5f5f6;
+    --accent:#5b4dd1;
+    --accent-tint:#ecebfa;
+    --ok:#3f9d6d;
+    --hold:#c9902b;
+    --idle:#b6b6be;
+    --maxw:1080px;
+    --pw:260px;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --canvas:#0e0e10;--surface:#151517;--band:#101012;--ink:#f3f3f5;--muted:#a1a1ab;
+      --faint:#71717a;--line:#28282c;--card:#1b1b1e;--accent:#a99cff;--accent-tint:#232035;
+      --ok:#5fbf8b;--hold:#dcae5a;--idle:#55555d;
+    }
+  }
+  :root[data-theme="dark"]{
+    --canvas:#0e0e10;--surface:#151517;--band:#101012;--ink:#f3f3f5;--muted:#a1a1ab;
+    --faint:#71717a;--line:#28282c;--card:#1b1b1e;--accent:#a99cff;--accent-tint:#232035;
+    --ok:#5fbf8b;--hold:#dcae5a;--idle:#55555d;
+  }
+  :root[data-theme="light"]{
+    --canvas:#f4f4f5;--surface:#ffffff;--band:#f1f1f3;--ink:#17171a;--muted:#6c6c74;
+    --faint:#9a9aa3;--line:#e6e6ea;--card:#f5f5f6;--accent:#5b4dd1;--accent-tint:#ecebfa;
+    --ok:#3f9d6d;--hold:#c9902b;--idle:#b6b6be;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--canvas);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  h1,h2,h3{margin:0;letter-spacing:-.021em;text-wrap:balance;color:var(--ink)}
+  p{margin:0;color:var(--muted);max-width:60ch}
+  a{color:inherit}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:96px 0 44px}
+  .hero .eyebrow{margin-bottom:22px}
+  .hero h1{font-size:clamp(42px,7vw,78px);font-weight:700;line-height:1.02}
+  .hero .lede{margin-top:24px;font-size:clamp(18px,2.4vw,22px);line-height:1.5;color:var(--muted);max-width:30ch;font-weight:400}
+  .hero h1 .soft{color:var(--faint)}
+
+  /* meta */
+  .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:56px;padding-top:28px;border-top:1px solid var(--line)}
+  .meta dt{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+  .meta dd{margin:0;font-size:15px;color:var(--ink);font-weight:500}
+  @media (max-width:640px){.meta{grid-template-columns:repeat(2,1fr);gap:22px}}
+
+  /* ---------- BANDS ---------- */
+  .band{background:var(--band);margin-top:64px}
+  .band .wrap{padding-top:72px;padding-bottom:72px}
+  .showcase{display:flex;gap:26px;justify-content:center;align-items:flex-end;flex-wrap:wrap}
+  .showcase .phone{--pw:216px}
+  .showcase .phone:nth-child(2){--pw:236px;margin-bottom:12px}
+
+  /* ---------- SECTION ---------- */
+  section{padding:72px 0}
+  .label{margin-bottom:34px;padding-bottom:14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+  .label .n{color:var(--faint);font-size:12px;font-weight:600;letter-spacing:.12em}
+
+  /* overview */
+  .overview h2{font-size:clamp(26px,3.6vw,36px);font-weight:650;line-height:1.18;max-width:22ch}
+  .overview .body{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:22px 56px}
+  .overview .body p{font-size:16px;line-height:1.62}
+  @media (max-width:720px){.overview .body{grid-template-columns:1fr}}
+
+  /* problem two-col */
+  .problem-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:40px 64px;align-items:start}
+  .problem-grid h2{font-size:clamp(26px,3.8vw,38px);font-weight:650;line-height:1.14;max-width:16ch}
+  .problem-grid .sub{font-size:19px;font-weight:600;color:var(--ink);margin-bottom:16px}
+  .problem-grid p{font-size:16px;line-height:1.62;margin-bottom:16px}
+  @media (max-width:760px){.problem-grid{grid-template-columns:1fr;gap:24px}}
+
+  /* goals */
+  .goals{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .goal{background:var(--surface);padding:28px 30px;display:flex;gap:18px;align-items:flex-start}
+  .goal .g{font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;color:var(--accent);padding-top:2px}
+  .goal p{font-size:16px;line-height:1.5;color:var(--ink)}
+  @media (max-width:640px){.goals{grid-template-columns:1fr}}
+
+  /* key screens */
+  .screens .label{margin-bottom:8px}
+  .featrow{display:grid;grid-template-columns:var(--pwcol,300px) 1fr;gap:64px;align-items:center;padding:56px 0;border-bottom:1px solid var(--line)}
+  .featrow:last-child{border-bottom:0}
+  .featrow .stage{display:flex;justify-content:center}
+  .featrow .copy{max-width:38ch}
+  .featrow .tag{font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
+  .featrow h3{margin-top:14px;font-size:clamp(24px,3vw,30px);font-weight:650;line-height:1.16}
+  .featrow .pts{margin-top:22px;list-style:none;padding:0;display:flex;flex-direction:column;gap:14px}
+  .featrow .pts li{position:relative;padding-left:22px;font-size:16px;line-height:1.5;color:var(--muted)}
+  .featrow .pts li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .featrow .pts li b{color:var(--ink);font-weight:600}
+  @media (max-width:820px){
+    .featrow{grid-template-columns:1fr;gap:34px;text-align:left}
+    .featrow .copy{max-width:100%}
+  }
+
+  /* features grid */
+  .fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .fcell{background:var(--surface);padding:30px 28px}
+  .fcell h4{margin:0 0 10px;font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+  .fcell p{font-size:14.5px;line-height:1.55}
+  @media (max-width:820px){.fgrid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:520px){.fgrid{grid-template-columns:1fr}}
+
+  /* outcome cards */
+  .cards{display:flex;flex-direction:column;gap:16px}
+  .ocard{background:var(--card);border-radius:16px;padding:34px 36px}
+  .ocard h4{margin:0 0 14px;font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.005em}
+  .ocard p{font-size:19px;line-height:1.5;color:var(--muted);max-width:66ch}
+  @media (max-width:640px){.ocard{padding:26px 24px}.ocard p{font-size:17px}}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);margin-top:24px}
+  footer .wrap{padding:40px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  footer span{font-size:14px;color:var(--faint)}
+  footer b{color:var(--ink);font-weight:600}
+
+  /* =========================================================
+     iPhone 17 Pro mockup — pure CSS
+     ========================================================= */
+  .phone{position:relative;width:var(--pw);aspect-ratio:1179/2556;background:#0a0a0c;
+    border-radius:calc(var(--pw)*.155);padding:calc(var(--pw)*.032);flex:none;
+    box-shadow:0 34px 70px -24px rgba(24,24,34,.42),0 10px 26px -10px rgba(24,24,34,.28),
+      inset 0 0 0 1.5px rgba(255,255,255,.06);}
+  .phone::before,.phone::after{content:"";position:absolute;left:-2px;width:2.5px;background:#161619;border-radius:2px}
+  .phone::before{top:22%;height:9%}
+  .phone::after{top:34%;height:14%}
+  .screen{position:relative;height:100%;width:100%;background:#fbfbfc;color:#17171a;
+    border-radius:calc(var(--pw)*.123);overflow:hidden;display:flex;flex-direction:column;
+    font-size:calc(var(--pw)*.0385);line-height:1.35}
+  .island{position:absolute;top:calc(var(--pw)*.03);left:50%;transform:translateX(-50%);
+    width:32%;height:calc(var(--pw)*.088);background:#0a0a0c;border-radius:99px;z-index:8}
+
+  /* status bar */
+  .sb{display:flex;justify-content:space-between;align-items:center;
+    padding:1.35em 1.7em .5em;font-weight:600}
+  .sb .t{font-size:1.02em;letter-spacing:-.01em}
+  .sb .r{display:flex;align-items:center;gap:.42em}
+  .sig{display:flex;align-items:flex-end;gap:.13em;height:.82em}
+  .sig i{width:.22em;background:#17171a;border-radius:.5px}
+  .sig i:nth-child(1){height:35%}.sig i:nth-child(2){height:55%}
+  .sig i:nth-child(3){height:78%}.sig i:nth-child(4){height:100%}
+  .wifi{width:.95em;height:.72em;border-radius:0 0 40% 40%/0 0 60% 60%;
+    border:.16em solid #17171a;border-top:0;border-left-color:transparent;border-right-color:transparent;position:relative;opacity:.9}
+  .wifi::after{content:"";position:absolute;left:50%;bottom:-.02em;transform:translateX(-50%);width:.2em;height:.2em;border-radius:50%;background:#17171a}
+  .bat{width:1.5em;height:.78em;border:.13em solid #17171a;border-radius:.28em;position:relative;padding:.1em;opacity:.9}
+  .bat::after{content:"";position:absolute;right:-.22em;top:50%;transform:translateY(-50%);width:.12em;height:.32em;background:#17171a;border-radius:0 1px 1px 0}
+  .bat i{display:block;height:100%;width:78%;background:#17171a;border-radius:.08em}
+
+  /* app chrome */
+  .app{flex:1;display:flex;flex-direction:column;padding:.4em 1.35em 1.2em;overflow:hidden}
+  .apphd{display:flex;justify-content:space-between;align-items:center;margin:.4em 0 1.1em}
+  .apphd .h{font-size:1.85em;font-weight:700;letter-spacing:-.02em}
+  .apphd .d{font-size:.92em;color:#8a8a92;margin-top:.2em;font-weight:500}
+  .apphd .av{width:2.5em;height:2.5em;border-radius:50%;background:var(--accent-tint);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.92em}
+  .back{display:flex;align-items:center;gap:.4em;font-size:.95em;color:var(--accent);font-weight:600;margin-bottom:.9em}
+  .back::before{content:"";width:.5em;height:.5em;border-left:.16em solid var(--accent);border-bottom:.16em solid var(--accent);transform:rotate(45deg)}
+
+  .pill{display:inline-flex;align-items:center;gap:.4em;font-size:.82em;font-weight:600;
+    padding:.34em .7em;border-radius:99px;background:#f0f0f2;color:#5b5b63}
+  .pill.ok{background:rgba(63,157,109,.13);color:#2f7d54}
+  .pill.hold{background:rgba(201,144,43,.15);color:#a9741e}
+  .pill.acc{background:var(--accent-tint);color:var(--accent)}
+  .dot{width:.55em;height:.55em;border-radius:50%;flex:none}
+  .dot.ok{background:var(--ok)}.dot.hold{background:var(--hold)}.dot.idle{background:var(--idle)}
+
+  /* work order list */
+  .summ{display:flex;gap:.55em;margin-bottom:1.1em}
+  .wo{display:flex;align-items:center;gap:.85em;padding:.95em .95em;border-radius:1em;
+    background:#fff;box-shadow:0 1px 0 rgba(20,20,30,.05),0 6px 16px -12px rgba(20,20,30,.22);margin-bottom:.7em}
+  .wo .id{font-size:.78em;color:#a0a0a8;font-weight:600;letter-spacing:.02em}
+  .wo .ti{font-size:1.02em;font-weight:600;margin-top:.15em;letter-spacing:-.01em}
+  .wo .mt{font-size:.82em;color:#8a8a92;margin-top:.28em;font-weight:500}
+  .wo .col{flex:1;min-width:0}
+  .wo .rt{text-align:right;font-size:.8em;color:#9a9aa2;font-weight:600;white-space:nowrap}
+  .wo.active{box-shadow:0 0 0 1.5px var(--accent),0 8px 20px -12px rgba(91,77,209,.5)}
+
+  /* timer card */
+  .timer{background:#0d0d10;color:#fff;border-radius:1.15em;padding:1.25em 1.3em;margin:.2em 0 1em}
+  .timer .lb{font-size:.82em;color:#9a9aa6;font-weight:600;letter-spacing:.03em}
+  .timer .cl{font-size:2.35em;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin:.15em 0 .55em}
+  .timer .cl small{font-size:.42em;color:#8a8a96;font-weight:600;margin-left:.4em;letter-spacing:0}
+  .btn{display:flex;align-items:center;justify-content:center;gap:.5em;width:100%;
+    padding:.85em;border-radius:.85em;font-size:.98em;font-weight:600;background:var(--accent);color:#fff}
+  .btn.g{background:#fff;color:#0d0d10}
+  .info{display:flex;flex-direction:column;gap:.7em;margin-top:.3em}
+  .info .row{display:flex;justify-content:space-between;font-size:.92em;padding-bottom:.7em;border-bottom:1px solid #efeff1}
+  .info .row:last-child{border-bottom:0}
+  .info .k{color:#9a9aa2;font-weight:500}
+  .info .v{color:#17171a;font-weight:600;text-align:right;max-width:60%}
+  .desc{font-size:.95em;color:#61616a;line-height:1.5;margin:.1em 0 1.1em}
+
+  .sechd{font-size:.86em;font-weight:600;color:#9a9aa2;letter-spacing:.02em;margin:.2em 0 .8em;text-transform:uppercase}
+  .chips{display:grid;grid-template-columns:1fr 1fr;gap:.6em;margin-bottom:1.1em}
+  .chip{display:flex;align-items:center;gap:.55em;padding:.85em .8em;border-radius:.85em;border:1.5px solid #ececef;
+    font-size:.92em;font-weight:600;color:#54545c}
+  .chip.sel{border-color:var(--accent);background:var(--accent-tint);color:var(--accent)}
+  .note{background:#fff;border:1px solid #ececef;border-radius:.9em;padding:.9em 1em;font-size:.9em;
+    color:#54545c;line-height:1.5;margin-bottom:1em}
+  .photos{display:flex;gap:.6em;margin-bottom:1.2em}
+  .ph{width:3.6em;height:3.6em;border-radius:.7em;background:#efeff1;flex:none}
+  .ph.add{border:1.5px dashed #cfcfd6;background:transparent;display:flex;align-items:center;justify-content:center;color:#b0b0b8;font-size:1.5em;font-weight:400}
+
+  /* summary screen */
+  .big{font-size:3.4em;font-weight:700;letter-spacing:-.03em;line-height:1;margin:.3em 0 .1em}
+  .big small{font-size:.32em;color:#9a9aa2;font-weight:600;letter-spacing:0}
+  .subtxt{font-size:.95em;color:#8a8a92;font-weight:500;margin-bottom:1.3em}
+  .stat{display:flex;justify-content:space-between;align-items:center;padding:.9em 0;border-bottom:1px solid #efeff1;font-size:.95em}
+  .stat .k{display:flex;align-items:center;gap:.6em;color:#54545c;font-weight:500}
+  .stat .v{font-weight:700;font-variant-numeric:tabular-nums}
+  .synced{margin-top:auto;display:flex;align-items:center;gap:.7em;background:rgba(63,157,109,.1);
+    color:#2f7d54;padding:.95em 1.1em;border-radius:.9em;font-size:.9em;font-weight:600}
+  .synced .ck{width:1.5em;height:1.5em;border-radius:50%;background:var(--ok);flex:none;position:relative}
+  .synced .ck::after{content:"";position:absolute;left:36%;top:20%;width:22%;height:44%;border:.14em solid #fff;border-top:0;border-left:0;transform:rotate(42deg)}
+  .synced .st{font-size:.85em;color:#4b8f6c;font-weight:500;margin-top:.15em}
+
+  @media (max-width:820px){:root{--pwcol:1fr}}
+  @media (prefers-reduced-motion: no-preference){
+    .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+    .reveal.in{opacity:1;transform:none}
+  }
+</style>
+
+</head>
+<body>
+<main>
+  <!-- HERO -->
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Case study · iOS · Field maintenance</div>
+      <h1>Artemis</h1>
+      <p class="lede">A technician's whole day — work orders to sign-off — run from one pocket.</p>
+
+      <dl class="meta">
+        <div><dt>Role</dt><dd>Product Design · UX / UI</dd></div>
+        <div><dt>Timeline</dt><dd>6 weeks · 2025</dd></div>
+        <div><dt>Platform</dt><dd>iOS · Offline-first</dd></div>
+        <div><dt>Scope</dt><dd>Concept · Key flows</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <!-- SHOWCASE BAND -->
+  <div class="band">
+    <div class="wrap">
+      <div class="showcase">
+        <!-- Phone 1: Today -->
+        <div class="phone"><div class="island"></div><div class="screen">
+          <div class="sb"><span class="t">9:41</span><span class="r"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="wifi"></span><span class="bat"><i></i></span></span></div>
+          <div class="app">
+            <div class="apphd"><div><div class="h">Today</div><div class="d">Mon, Jul 13 · 6 jobs</div></div><div class="av">SR</div></div>
+            <div class="summ"><span class="pill ok"><span class="dot ok"></span>2 done</span><span class="pill"><span class="dot idle"></span>4 to go</span></div>
+            <div class="wo active"><span class="dot ok"></span><div class="col"><div class="id">WO-4021</div><div class="ti">Leaking faucet</div><div class="mt">Unit 214 · Bldg A</div></div><div class="rt">Clocked in<br>0:42</div></div>
+            <div class="wo"><span class="dot idle"></span><div class="col"><div class="id">WO-4022</div><div class="ti">HVAC filter</div><div class="mt">Unit 118 · Bldg A</div></div><div class="rt">10:30</div></div>
+            <div class="wo"><span class="dot hold"></span><div class="col"><div class="id">WO-4023</div><div class="ti">Garbage disposal</div><div class="mt">Unit 305 · Bldg B</div></div><div class="rt">On hold</div></div>
+            <div class="wo"><span class="dot idle"></span><div class="col"><div class="id">WO-4024</div><div class="ti">Light fixture</div><div class="mt">Unit 402 · Bldg B</div></div><div class="rt">1:15</div></div>
+          </div>
+        </div></div>
+
+        <!-- Phone 2: Work order + timer -->
+        <div class="phone"><div class="island"></div><div class="screen">
+          <div class="sb"><span class="t">9:41</span><span class="r"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="wifi"></span><span class="bat"><i></i></span></span></div>
+          <div class="app">
+            <div class="back">Today</div>
+            <div class="apphd"><div><div class="d">WO-4021 · Plumbing</div><div class="h" style="font-size:1.5em">Leaking faucet</div></div><span class="pill hold" style="align-self:flex-start">High</span></div>
+            <p class="desc">Resident reports a steady drip under the kitchen sink. Cabinet base is damp.</p>
+            <div class="timer">
+              <div class="lb">Time on job</div>
+              <div class="cl">00:42:18<small>running</small></div>
+              <div class="btn g">Clock out</div>
+            </div>
+            <div class="info">
+              <div class="row"><span class="k">Unit</span><span class="v">214 · Building A</span></div>
+              <div class="row"><span class="k">Resident</span><span class="v">Sarah M.</span></div>
+              <div class="row"><span class="k">Access</span><span class="v">Key at office</span></div>
+            </div>
+          </div>
+        </div></div>
+
+        <!-- Phone 3: Status / log -->
+        <div class="phone"><div class="island"></div><div class="screen">
+          <div class="sb"><span class="t">9:41</span><span class="r"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="wifi"></span><span class="bat"><i></i></span></span></div>
+          <div class="app">
+            <div class="back">WO-4021</div>
+            <div class="apphd"><div class="h" style="font-size:1.5em">Update status</div></div>
+            <div class="sechd">Outcome</div>
+            <div class="chips">
+              <span class="chip sel"><span class="dot ok"></span>Completed</span>
+              <span class="chip"><span class="dot hold"></span>On hold</span>
+              <span class="chip"><span class="dot idle"></span>Resident away</span>
+              <span class="chip"><span class="dot idle"></span>Parts needed</span>
+            </div>
+            <div class="sechd">Notes</div>
+            <div class="note">Replaced cartridge and O-rings. Ran taps for 5 min — no leak. Wiped cabinet dry.</div>
+            <div class="sechd">Photos</div>
+            <div class="photos"><span class="ph"></span><span class="ph"></span><span class="ph add">+</span></div>
+            <div class="btn">Sync to planning</div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section class="overview">
+    <div class="wrap">
+      <div class="label"><span class="eyebrow">Overview</span><span class="n">01</span></div>
+      <h2>Artemis turns a technician's day into one guided flow — from the morning's work orders to the last status synced back to planning.</h2>
+      <div class="body">
+        <p>Maintenance technicians juggle radio calls, paper tickets, and after-hours data entry. Artemis puts the whole route in one place: what's next, clock in, log what happened, move on.</p>
+        <p>Every update — completed, on hold, resident away, parts needed — flows straight back to the planning team, so the day's schedule stays honest in real time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <div class="band">
+    <div class="wrap">
+      <section style="padding:8px 0" class="prob">
+        <div class="label"><span class="eyebrow">Problem</span><span class="n">02</span></div>
+        <div class="problem-grid">
+          <h2>The day's work lives in too many places.</h2>
+          <div>
+            <div class="sub">Friction adds up on every job.</div>
+            <p>Technicians lose time chasing the next address, re-explaining delays over the radio, and re-keying notes long after the last unit.</p>
+            <p>When a job stalls — no access, missing parts, resident away — planning finds out late, and the whole schedule quietly drifts.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- GOALS -->
+  <section>
+    <div class="wrap">
+      <div class="label"><span class="eyebrow">Goals</span><span class="n">03</span></div>
+      <div class="goals">
+        <div class="goal"><span class="g">01</span><p>Give technicians one clear view of the day, in order.</p></div>
+        <div class="goal"><span class="g">02</span><p>Make clock in, clock out, and status a single tap in the field.</p></div>
+        <div class="goal"><span class="g">03</span><p>Capture the <em>why</em> behind every delay — not just the what.</p></div>
+        <div class="goal"><span class="g">04</span><p>Keep planning in sync without a single phone call.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY SCREENS -->
+  <section class="screens">
+    <div class="wrap">
+      <div class="label"><span class="eyebrow">Key screens</span><span class="n">04</span></div>
+
+      <div class="featrow">
+        <div class="stage"><div class="phone" style="--pw:288px"><div class="island"></div><div class="screen">
+          <div class="sb"><span class="t">9:41</span><span class="r"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="wifi"></span><span class="bat"><i></i></span></span></div>
+          <div class="app">
+            <div class="apphd"><div><div class="h">Today</div><div class="d">Mon, Jul 13 · 6 jobs</div></div><div class="av">SR</div></div>
+            <div class="summ"><span class="pill ok"><span class="dot ok"></span>2 done</span><span class="pill"><span class="dot idle"></span>4 to go</span></div>
+            <div class="wo active"><span class="dot ok"></span><div class="col"><div class="id">WO-4021</div><div class="ti">Leaking faucet</div><div class="mt">Unit 214 · Bldg A</div></div><div class="rt">Clocked in<br>0:42</div></div>
+            <div class="wo"><span class="dot idle"></span><div class="col"><div class="id">WO-4022</div><div class="ti">HVAC filter</div><div class="mt">Unit 118 · Bldg A</div></div><div class="rt">10:30</div></div>
+            <div class="wo"><span class="dot hold"></span><div class="col"><div class="id">WO-4023</div><div class="ti">Garbage disposal</div><div class="mt">Unit 305 · Bldg B</div></div><div class="rt">On hold</div></div>
+            <div class="wo"><span class="dot idle"></span><div class="col"><div class="id">WO-4024</div><div class="ti">Light fixture</div><div class="mt">Unit 402 · Bldg B</div></div><div class="rt">1:15</div></div>
+          </div>
+        </div></div></div>
+        <div class="copy">
+          <div class="tag">01 / The day</div>
+          <h3>The day, in order.</h3>
+          <ul class="pts">
+            <li>Route <b>sorted by time and priority</b>, not a paper list.</li>
+            <li>Status of every job <b>at a glance</b> — done, active, on hold.</li>
+            <li>A <b>live timer</b> stays pinned to the job in progress.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="featrow">
+        <div class="stage"><div class="phone" style="--pw:288px"><div class="island"></div><div class="screen">
+          <div class="sb"><span class="t">9:41</span><span class="r"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="wifi"></span><span class="bat"><i></i></span></span></div>
+          <div class="app">
+            <div class="back">Today</div>
+            <div class="apphd"><div><div class="d">WO-4021 · Plumbing</div><div class="h" style="font-size:1.5em">Leaking faucet</div></div><span class="pill hold" style="align-self:flex-start">High</span></div>
+            <p class="desc">Resident reports a steady drip under the kitchen sink. Cabinet base is damp.</p>
+            <div class="timer">
+              <div class="lb">Time on job</div>
+              <div class="cl">00:42:18<small>running</small></div>
+              <div class="btn g">Clock out</div>
+            </div>
+            <div class="info">
+              <div class="row"><span class="k">Unit</span><span class="v">214 · Building A</span></div>
+              <div class="row"><span class="k">Resident</span><span class="v">Sarah M.</span></div>
+              <div class="row"><span class="k">Access</span><span class="v">Key at office</span></div>
+            </div>
+          </div>
+        </div></div></div>
+        <div class="copy">
+          <div class="tag">02 / Clock in</div>
+          <h3>Clock in where the work is.</h3>
+          <ul class="pts">
+            <li><b>One tap</b> to start the clock against the right work order.</li>
+            <li>Resident name and <b>access notes up front</b> — no callbacks.</li>
+            <li>The timer <b>keeps running offline</b> and reconciles on sync.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="featrow">
+        <div class="stage"><div class="phone" style="--pw:288px"><div class="island"></div><div class="screen">
+          <div class="sb"><span class="t">9:41</span><span class="r"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="wifi"></span><span class="bat"><i></i></span></span></div>
+          <div class="app">
+            <div class="back">WO-4021</div>
+            <div class="apphd"><div class="h" style="font-size:1.5em">Update status</div></div>
+            <div class="sechd">Outcome</div>
+            <div class="chips">
+              <span class="chip sel"><span class="dot ok"></span>Completed</span>
+              <span class="chip"><span class="dot hold"></span>On hold</span>
+              <span class="chip"><span class="dot idle"></span>Resident away</span>
+              <span class="chip"><span class="dot idle"></span>Parts needed</span>
+            </div>
+            <div class="sechd">Notes</div>
+            <div class="note">Replaced cartridge and O-rings. Ran taps for 5 min — no leak. Wiped cabinet dry.</div>
+            <div class="sechd">Photos</div>
+            <div class="photos"><span class="ph"></span><span class="ph"></span><span class="ph add">+</span></div>
+            <div class="btn">Sync to planning</div>
+          </div>
+        </div></div></div>
+        <div class="copy">
+          <div class="tag">03 / Log</div>
+          <h3>Log the why, not just the what.</h3>
+          <ul class="pts">
+            <li>Structured outcomes: <b>completed, on hold, resident away, parts needed.</b></li>
+            <li>Notes and photos capture <b>evidence in two taps.</b></li>
+            <li>Every hold carries a <b>reason planning can act on.</b></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="featrow">
+        <div class="stage"><div class="phone" style="--pw:288px"><div class="island"></div><div class="screen">
+          <div class="sb"><span class="t">9:41</span><span class="r"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="wifi"></span><span class="bat"><i></i></span></span></div>
+          <div class="app">
+            <div class="apphd"><div class="h">Day summary</div></div>
+            <div class="d" style="color:#8a8a92;font-weight:500;margin-top:-.4em">Mon, Jul 13</div>
+            <div class="big">5<small> of 6 jobs</small></div>
+            <div class="subtxt">6h 12m tracked across the route</div>
+            <div class="stat"><span class="k"><span class="dot hold"></span>On hold</span><span class="v">1</span></div>
+            <div class="stat"><span class="k"><span class="dot idle"></span>Resident away</span><span class="v">1</span></div>
+            <div class="stat"><span class="k"><span class="dot ok"></span>Completed</span><span class="v">5</span></div>
+            <div class="synced"><span class="ck"></span><div><div>All updates synced</div><div class="st">Sent to maintenance planning</div></div></div>
+          </div>
+        </div></div></div>
+        <div class="copy">
+          <div class="tag">04 / Relay</div>
+          <h3>Relayed the moment it happens.</h3>
+          <ul class="pts">
+            <li>Updates <b>sync automatically</b> the second there's signal.</li>
+            <li>A <b>day summary</b> writes itself — hours, jobs, holds.</li>
+            <li>Planning sees <b>delays live</b>, not at the end of the shift.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <div class="band">
+    <div class="wrap">
+      <section>
+        <div class="label"><span class="eyebrow">Features</span><span class="n">05</span></div>
+        <div class="fgrid">
+          <div class="fcell"><h4>Offline-first</h4><p>Timers and logs work with no signal, then sync the moment it returns.</p></div>
+          <div class="fcell"><h4>Guided route</h4><p>Jobs ordered by time, priority, and location — no re-planning on the move.</p></div>
+          <div class="fcell"><h4>One-tap clock</h4><p>Start and stop time against the exact work order, never the wrong one.</p></div>
+          <div class="fcell"><h4>Status with a reason</h4><p>Structured holds planning can act on — away, parts, access.</p></div>
+          <div class="fcell"><h4>Photo evidence</h4><p>Before and after attached to the ticket in a couple of taps.</p></div>
+          <div class="fcell"><h4>Auto-relay</h4><p>Every change flows to the planning system in real time.</p></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- OUTCOME -->
+  <section>
+    <div class="wrap">
+      <div class="label"><span class="eyebrow">Reflection</span><span class="n">06</span></div>
+      <div class="cards">
+        <div class="ocard"><h4>Design insight</h4><p>Technicians don't want an app — they want fewer steps. Every screen had to earn its place or get cut.</p></div>
+        <div class="ocard"><h4>Key learning</h4><p>A status is only useful with a reason attached. "On hold" tells planning nothing without the why behind it.</p></div>
+        <div class="ocard"><h4>Outcome</h4><p>A single field flow that replaces radio calls, paper tickets, and after-hours data entry — and keeps planning in sync all day.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span><b>Nikith D'Souza</b> · Artemis Technician App</span>
+      <span>Concept case study · 2025</span>
+    </div>
+  </footer>
+</main>
+
+<script>
+  (function(){
+    var els=document.querySelectorAll('.featrow,.overview h2,.ocard,.goal,.fcell');
+    els.forEach(function(el){el.classList.add('reveal')});
+    if(!('IntersectionObserver'in window)){els.forEach(function(el){el.classList.add('in')});return;}
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12});
+    els.forEach(function(el){io.observe(el)});
+  })();
+</script>
+</body>
+</html>
