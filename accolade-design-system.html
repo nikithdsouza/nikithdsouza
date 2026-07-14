@@ -221,16 +221,19 @@ button{font-family:inherit;cursor:pointer;}
 .props code{font-family:var(--mono);font-size:12.5px;background:var(--accent);color:var(--primary);padding:1px 6px;border-radius:5px;}
 
 /* colors page */
-.fam-wrap{overflow-x:auto;margin:14px 0 6px;}
-.fam-grid{display:grid;grid-template-columns:repeat(11,minmax(84px,1fr));min-width:940px;border-radius:var(--radius-md);}
-.fam-chip{height:86px;position:relative;display:flex;align-items:flex-end;padding:8px 9px;}
-.fam-col:first-child .fam-chip{border-radius:var(--radius-md) 0 0 var(--radius-md);}
-.fam-col:last-child .fam-chip{border-radius:0 var(--radius-md) var(--radius-md) 0;}
-.fam-ct{font-size:10px;letter-spacing:.01em;opacity:.92;}
-.fam-ct b{font-weight:700;font-size:10.5px;margin-right:3px;}
-.fam-info{padding:9px 2px 0;}
-.fam-info .fn{font-size:11.5px;font-weight:600;letter-spacing:-.01em;}
-.fam-info .fh{font-size:10.5px;color:var(--muted-foreground);font-family:var(--mono);margin-top:2px;text-transform:uppercase;}
+.scale-label{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted-foreground);margin:18px 0 10px;}
+.scale-preview{display:flex;gap:2px;height:52px;border-radius:12px;overflow:hidden;}
+.scale-preview > div{flex:1;}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;margin:20px 0 8px;}
+.ccard{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--card);box-shadow:var(--shadow-xs);}
+.ccard .cchip{height:120px;}
+.ccard .cinfo{padding:13px 16px 15px;position:relative;}
+.ccard .cstep{font-size:17px;font-weight:700;letter-spacing:-.01em;}
+.ccard .ctok{font-family:var(--mono);font-size:12px;color:#525252;margin-top:5px;}
+.ccard .chex{font-family:var(--mono);font-size:12px;color:var(--muted-foreground);margin-top:3px;text-transform:uppercase;}
+.ccopy{position:absolute;top:32px;right:12px;width:30px;height:30px;border-radius:8px;border:0;background:transparent;color:var(--muted-foreground);display:flex;align-items:center;justify-content:center;transition:.14s;}
+.ccopy:hover{background:var(--muted);color:var(--foreground);}
+.ccopy.copied{color:var(--success-fg);}
 .color-note{border:1px solid var(--border);border-left:3px solid var(--brand-300);border-radius:var(--radius-md);padding:13px 16px;margin:12px 0;font-size:13px;color:#3d3d3d;line-height:1.65;}
 .color-note b{color:var(--foreground);}
 .swatch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin:16px 0;}
@@ -1063,10 +1066,12 @@ function renderChangelog(art,toc){
 
 /* ---------- Foundations ---------- */
 function renderColors(art,toc){
-  /* Six 11-step families from the Accolade DS 2.0 Figma library (Colors page). */
+  /* Color families from the Accolade DS 2.0 Figma library (Colors page). Primary first. */
   const FAM=[
-    ["Brand","Teal is Accolade’s identity. brand-600 is the light-mode primary; brand-300 is the dark-mode primary.",
+    ["Primary","Accolade’s main brand teal. primary-600 is the light-mode primary; primary-300 is the dark-mode primary.",
      [["50","#DFFBFF"],["100","#C2E1EB"],["200","#A4C9D4"],["300","#85B1BD"],["400","#6799A7"],["500","#448393"],["600","#206C7E"],["700","#005061"],["800","#003444"],["900","#001A28"],["950","#00040F"]]],
+    ["Secondary","Supporting green for secondary actions and accents.",
+     [["50","#E7F0ED"],["100","#CFE0DC"],["200","#B8D1CB"],["300","#A0C1B9"],["400","#88B2A7"],["500","#71A396"],["600","#599384"],["700","#418473"],["800","#2A7563"],["900","#126653"]]],
     ["Neutral","Greys for text, surfaces, borders, and disabled states.",
      [["50","#F5F5F6"],["100","#D4D5D6"],["200","#B6B6B7"],["300","#989898"],["400","#7B7B7B"],["500","#5F5F5F"],["600","#444445"],["700","#2B2B2C"],["800","#151515"],["900","#030303"],["950","#000000"]]],
     ["Error","A carefully crafted color that enhances your design system.",
@@ -1078,32 +1083,41 @@ function renderColors(art,toc){
     ["Success","A carefully crafted color that enhances your design system.",
      [["50","#D2FFDB"],["100","#ABF0BC"],["200","#8CDEA2"],["300","#77C888"],["400","#54B56C"],["500","#16A34A"],["600","#00841E"],["700","#006400"],["800","#004400"],["900","#002500"],["950","#000900"]]],
   ];
-  const lum=h=>{const c=parseInt(h.slice(1),16);const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);};return .2126*f(c>>16)+.7152*f((c>>8)&255)+.0722*f(c&255);};
-  const cr=(a,b)=>(Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+  const COPY_ICON='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
   const famHTML=([name,desc,steps])=>{
-    const cells=steps.map(([step,hex])=>{
-      const L=lum(hex), onW=cr(L,1), onB=cr(L,0);
-      const dark=onB>onW; // black text wins → light chip
-      const r=Math.max(onW,onB);
-      const badge=r>=7?'AAA':r>=4.5?'AA':r>=3?'AA18':'—';
-      return '<div class="fam-col"><div class="fam-chip" style="background:'+hex+';color:'+(dark?'#0a0a0a':'#fff')+'"><span class="fam-ct"><b>'+badge+'</b>'+r.toFixed(1)+':1</span></div>' +
-        '<div class="fam-info"><div class="fn">'+name.toLowerCase()+'-'+step+'</div><div class="fh">'+hex+'</div></div></div>';
-    }).join("");
-    return '<h2 id="'+name.toLowerCase()+'">'+name+'</h2><p class="section-sub">'+desc+'</p>' +
-      '<div class="fam-wrap"><div class="fam-grid">'+cells+'</div></div>';
+    const bar='<div class="scale-label">Full scale preview</div><div class="scale-preview">'+steps.map(([,hex])=>'<div style="background:'+hex+'"></div>').join("")+'</div>';
+    const cards=steps.map(([step,hex])=>
+      '<div class="ccard"><div class="cchip" style="background:'+hex+'"></div><div class="cinfo">' +
+        '<div class="cstep">'+step+'</div>' +
+        '<div class="ctok">'+name.toLowerCase()+'-'+step+'</div>' +
+        '<div class="chex">'+hex+'</div>' +
+        '<button class="ccopy" title="Copy '+hex+'" aria-label="Copy '+hex+'" onclick="copySwatch(this,\''+hex+'\')">'+COPY_ICON+'</button>' +
+      '</div></div>').join("");
+    return '<h2 id="'+name.toLowerCase()+'">'+name+'</h2><p class="section-sub">'+desc+'</p>' + bar +
+      '<div class="cgrid">'+cards+'</div>';
   };
   art.innerHTML = crumbsHTML(["Home","Foundations","Colors"]) +
     '<h1 class="page-title">Colors</h1>' +
-    '<p class="lede">Six families — Brand, Neutral, Error, Warning, Information, and Success — each an 11-step scale from 50 to 950. Contrast is shown per step against its best-contrast text color.</p>' +
+    '<p class="lede">Seven families — Primary, Secondary, Neutral, Error, Warning, Information, and Success. Each swatch card shows the step, token name, and hex, with one-click copy.</p>' +
     metaRowHTML(PAGE_META.colors.updated) +
     FAM.map(famHTML).join("") +
     '<h2 id="notes">Standards & workflow</h2>' +
     '<div class="color-note"><b>Accessibility standards.</b> WCAG 2.1 — all primary combinations meet the minimum contrast ratio of 4.5:1 for standard text. APCA — colors have been audited using the Accessible Perceptual Contrast Algorithm to ensure better readability across various display types.</div>' +
     '<div class="color-note"><b>Workflow.</b> Palette generation — developed using PencilColor to ensure harmonious tonal steps.</div>' +
-    '<div class="color-note"><b>Thematic mapping (Product &amp; Marketing).</b> Light mode: brand-600 is designated as the primary brand color. Dark mode: brand-300 is designated as the primary brand color. This mapping applies strictly to both Product Design and all Marketing collateral to maintain cross-channel consistency.</div>' +
-    ddRow("Reference the semantic steps through tokens (brand-600, error-600) so designs resolve correctly in both modes.",
+    '<div class="color-note"><b>Thematic mapping (Product &amp; Marketing).</b> Light mode: primary-600 is designated as the primary brand color. Dark mode: primary-300 is designated as the primary brand color. This mapping applies strictly to both Product Design and all Marketing collateral to maintain cross-channel consistency.</div>' +
+    ddRow("Reference the semantic steps through tokens (primary-600, error-600) so designs resolve correctly in both modes.",
           "Don’t hard-code hex values from the scales directly into product screens.");
-  toc.innerHTML = tocHTML([["brand","Brand"],["neutral","Neutral"],["error","Error"],["warning","Warning"],["information","Information"],["success","Success"],["notes","Standards & workflow"]]);
+  toc.innerHTML = tocHTML([["primary","Primary"],["secondary","Secondary"],["neutral","Neutral"],["error","Error"],["warning","Warning"],["information","Information"],["success","Success"],["notes","Standards & workflow"]]);
+}
+function copySwatch(btn,hex){
+  navigator.clipboard.writeText(hex).then(()=>{
+    btn.classList.add('copied');
+    btn.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    setTimeout(()=>{
+      btn.classList.remove('copied');
+      btn.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    },1200);
+  });
 }
 
 function renderTypography(art,toc){
