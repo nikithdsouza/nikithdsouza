@@ -332,6 +332,32 @@ button{font-family:inherit;cursor:pointer;}
 .ph-content .t{font-size:14px;font-weight:600;color:var(--primary);}
 .ph-content .s{font-size:12.5px;color:#5f7c83;margin-top:2px;}
 
+/* code blocks (zeroheight-style) */
+.codeblock{position:relative;margin:14px 0;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:#0d1117;}
+.codeblock .cbar{display:flex;align-items:center;gap:7px;padding:8px 12px;border-bottom:1px solid #21262d;}
+.codeblock .cbar .fn{font-size:12px;color:#8b949e;font-family:var(--mono);}
+.copy-btn{margin-left:auto;font-size:11px;color:#8b949e;background:#161b22;border:1px solid #21262d;border-radius:5px;padding:3px 9px;transition:.14s;cursor:pointer;}
+.copy-btn:hover{color:#e6edf3;background:#21262d;}
+.codeblock pre{margin:0;padding:16px 18px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.7;color:#e6edf3;}
+/* resources row */
+.res-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 0;}
+.res-chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:100px;font-size:12.5px;font-weight:550;color:#333;border:1px solid var(--border);background:var(--background);transition:.14s;letter-spacing:-.01em;}
+.res-chip:hover{background:var(--muted);border-color:var(--border-strong);}
+.res-imp{font-family:var(--mono);font-size:11.5px;color:var(--muted-foreground);background:var(--muted);border-radius:6px;padding:5px 10px;}
+/* functional preview helpers */
+.tipwrap{position:relative;display:inline-flex;}
+.tipwrap .tip{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);opacity:0;pointer-events:none;transition:opacity .15s;background:#0a0a0a;color:#fff;font-size:12.5px;font-weight:500;padding:6px 10px;border-radius:6px;white-space:nowrap;z-index:6;}
+.tipwrap .tip::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%) rotate(45deg);width:8px;height:8px;background:#0a0a0a;margin-top:-4px;}
+.tipwrap:hover .tip,.tipwrap:focus-within .tip{opacity:1;}
+.pvinput{width:100%;height:40px;border:1px solid var(--input);border-radius:var(--radius-md);padding:0 12px;font-size:14px;font-family:inherit;outline:none;background:#fff;transition:.15s;color:var(--foreground);}
+.pvinput::placeholder{color:var(--muted-foreground);}
+.pvinput:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--ring);}
+.pvopt{padding:8px 10px;border-radius:6px;font-size:14px;cursor:pointer;}
+.pvopt:hover{background:var(--muted);}
+/* sheet (drawer demo) */
+.sheet{width:400px;max-width:90vw;background:var(--card);border-left:1px solid var(--border);box-shadow:var(--shadow-xl);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .26s cubic-bezier(.16,1,.3,1);}
+.overlay.open .sheet{transform:none;}
+@keyframes fade{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:none;}}
 .mobile-note{display:none;}
 .menu-btn{display:none;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:#fff;flex-shrink:0;}
 @media(max-width:1180px){
@@ -413,6 +439,26 @@ button{font-family:inherit;cursor:pointer;}
     <div class="dialog-foot">
       <button class="acc-btn acc-btn--ghost acc-btn--sm" onclick="closeDialog()">Cancel</button>
       <button class="acc-btn acc-btn--primary acc-btn--sm" onclick="confirmDialog()">Archive claim</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Live functional Sheet (Drawer demo) ===== -->
+<div class="overlay" id="sheetOverlay" style="justify-content:flex-end;align-items:stretch;padding:0" onclick="if(event.target===this)closeSheet()">
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="Claim details">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div style="font-weight:650;font-size:15px">Claim details</div>
+      <button class="dialog-x" onclick="closeSheet()" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div style="padding:20px;font-size:14px;color:#3d3d3d;line-height:1.65;flex:1;overflow-y:auto">
+      <div style="font-weight:600;margin-bottom:6px">Claim #8218851 · Merchant Risk</div>
+      Full claim history, uploaded documents, and the audit trail render in this panel while the worklist stays visible behind it.
+    </div>
+    <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;background:#fcfcfc">
+      <button class="acc-btn acc-btn--ghost acc-btn--sm" onclick="closeSheet()">Close</button>
+      <button class="acc-btn acc-btn--primary acc-btn--sm" onclick="closeSheet()">Open full claim</button>
     </div>
   </div>
 </div>
@@ -756,25 +802,25 @@ const PREVIEW = {
   button:'<div class="spec-grid"><button class="acc-btn acc-btn--primary">Save changes</button><button class="acc-btn acc-btn--secondary">Secondary</button><button class="acc-btn acc-btn--outline">Outline</button><button class="acc-btn acc-btn--ghost">Tertiary</button><button class="acc-btn acc-btn--destructive">Delete</button></div>',
   badge:'<div class="spec-grid"><span class="acc-badge acc-badge--brand">Verified</span><span class="acc-badge acc-badge--success">Active</span><span class="acc-badge acc-badge--info">In review</span><span class="acc-badge acc-badge--warning">Pending</span><span class="acc-badge acc-badge--neutral">Archived</span></div>',
   breadcrumbs:'<nav class="acc-crumbs" aria-label="Breadcrumb"><a>Home</a><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg><a>Claims</a><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg><a>Merchant Risk</a><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg><span class="cur">Claim #8218851</span></nav>',
-  tabs:'<div style="width:100%;max-width:420px"><div style="display:flex;gap:2px;border-bottom:1px solid var(--border)"><span style="padding:10px 14px;font-size:14px;font-weight:600;color:var(--primary);border-bottom:2px solid var(--primary);margin-bottom:-1px">Details</span><span style="padding:10px 14px;font-size:14px;font-weight:500;color:var(--muted-foreground)">Documents</span><span style="padding:10px 14px;font-size:14px;font-weight:500;color:var(--muted-foreground)">History</span></div><div style="padding:16px 2px;font-size:13.5px;color:var(--muted-foreground)">Claim details panel content…</div></div>',
-  pagination:'<div style="display:flex;align-items:center;gap:16px"><span style="font-size:13px;color:var(--muted-foreground)">26–50 of 312</span><div style="display:flex;gap:6px"><button class="acc-btn acc-btn--outline acc-btn--sm" style="width:34px;padding:0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button><button class="acc-btn acc-btn--outline acc-btn--sm" style="width:34px;padding:0">1</button><button class="acc-btn acc-btn--primary acc-btn--sm" style="width:34px;padding:0">2</button><button class="acc-btn acc-btn--outline acc-btn--sm" style="width:34px;padding:0">3</button><button class="acc-btn acc-btn--outline acc-btn--sm" style="width:34px;padding:0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button></div></div>',
+  tabs:'<div style="width:100%;max-width:440px"><div style="display:flex;gap:2px;border-bottom:1px solid var(--border)"><button class="pvtab" data-txt="Claim details panel content shows here." onclick="pvTab(this)" style="appearance:none;border:0;background:none;padding:10px 14px;font-size:14px;cursor:pointer;border-bottom:2px solid var(--primary);margin-bottom:-1px;font-weight:600;color:var(--primary)">Details</button><button class="pvtab" data-txt="Uploaded documents and attachments list renders here." onclick="pvTab(this)" style="appearance:none;border:0;background:none;padding:10px 14px;font-size:14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500;color:var(--muted-foreground)">Documents</button><button class="pvtab" data-txt="Full audit history with timestamps renders here." onclick="pvTab(this)" style="appearance:none;border:0;background:none;padding:10px 14px;font-size:14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500;color:var(--muted-foreground)">History</button></div><div class="pvtabbody" style="padding:16px 2px;font-size:13.5px;color:var(--muted-foreground)">Claim details panel content shows here.</div></div>',
+  pagination:'<div style="display:flex;align-items:center;gap:16px"><span class="pvrange" style="font-size:13px;color:var(--muted-foreground)">26\u201350 of 312</span><div class="pvpager" style="display:flex;gap:6px"><button class="acc-btn acc-btn--outline acc-btn--sm" style="width:34px;padding:0" onclick="pvPageStep(this,-1)" aria-label="Previous page"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button><button class="acc-btn acc-btn--outline acc-btn--sm pvpg" style="width:34px;padding:0" onclick="pvPage(this)">1</button><button class="acc-btn acc-btn--primary acc-btn--sm pvpg" style="width:34px;padding:0" onclick="pvPage(this)">2</button><button class="acc-btn acc-btn--outline acc-btn--sm pvpg" style="width:34px;padding:0" onclick="pvPage(this)">3</button><button class="acc-btn acc-btn--outline acc-btn--sm" style="width:34px;padding:0" onclick="pvPageStep(this,1)" aria-label="Next page"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button></div></div>',
   alert:'<div style="width:100%;max-width:460px;display:flex;gap:12px;padding:14px 16px;background:var(--info-bg);border:1px solid var(--info-bg);border-radius:var(--radius-md);color:var(--info-fg)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><circle cx="12" cy="16" r=".6" fill="currentColor"/></svg><div><div style="font-weight:600;font-size:14px;color:#1e3a8a">Eligibility check queued</div><div style="font-size:13px;margin-top:2px;color:#3b5bab">We’ll notify the care team when results are ready.</div></div></div>',
-  tooltip:'<div style="display:flex;flex-direction:column;align-items:center;gap:12px"><div style="background:#0a0a0a;color:#fff;font-size:12.5px;font-weight:500;padding:6px 10px;border-radius:6px;position:relative">Copy claim ID<div style="position:absolute;left:50%;bottom:-4px;transform:translateX(-50%) rotate(45deg);width:8px;height:8px;background:#0a0a0a"></div></div><button class="acc-btn acc-btn--outline acc-btn--sm">Hover target</button></div>',
+  tooltip:'<div class="tipwrap"><button class="acc-btn acc-btn--outline acc-btn--sm">Hover target</button><div class="tip">Copy claim ID</div></div>',
   avatar:'<div class="spec-grid"><span class="avatar-sm" style="width:40px;height:40px;font-size:14px">PC</span><span class="avatar-sm" style="width:40px;height:40px;font-size:14px;background:linear-gradient(135deg,#005061,#437df8)">AR</span><span class="avatar-sm" style="width:40px;height:40px;font-size:14px;background:linear-gradient(135deg,#16a34a,#85b1bd)">SK</span><span style="width:40px;height:40px;border-radius:50%;border:1px dashed var(--border-strong);display:inline-flex;align-items:center;justify-content:center;color:var(--muted-foreground)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></svg></span></div>',
-  switch:'<div class="spec-grid" style="gap:24px"><span style="display:inline-flex;align-items:center;gap:10px;font-size:14px"><span style="width:40px;height:24px;border-radius:100px;background:var(--primary);position:relative"><span style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:var(--shadow-xs)"></span></span>Notifications</span><span style="display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--muted-foreground)"><span style="width:40px;height:24px;border-radius:100px;background:#d4d4d4;position:relative"><span style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:var(--shadow-xs)"></span></span>Auto-assign</span></div>',
-  checkbox:'<div style="display:flex;flex-direction:column;gap:14px"><label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer"><span style="width:18px;height:18px;border-radius:5px;background:var(--primary);display:inline-flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span>Send eligibility summary</label><label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;color:#3d3d3d"><span style="width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border-strong);background:#fff"></span>Notify primary care provider</label></div>',
-  radio:'<div style="display:flex;flex-direction:column;gap:14px"><label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer"><span style="width:18px;height:18px;border-radius:50%;border:5.5px solid var(--primary);background:#fff"></span>Standard review</label><label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;color:#3d3d3d"><span style="width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border-strong);background:#fff"></span>Expedited review</label></div>',
-  input:'<div style="width:100%;max-width:320px"><label style="display:block;font-size:13px;font-weight:500;margin-bottom:6px">Claim number</label><div style="height:40px;border:1px solid var(--primary);border-radius:var(--radius-md);box-shadow:0 0 0 3px var(--ring);display:flex;align-items:center;padding:0 12px;font-size:14px;color:#0a0a0a;background:#fff">#8218851<span style="width:1px;height:16px;background:var(--primary);margin-left:1px;animation:blink 1s steps(1) infinite"></span></div></div><style>@keyframes blink{50%{opacity:0}}</style>',
-  select:'<div style="width:100%;max-width:320px"><div style="height:40px;border:1px solid var(--input);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:14px;background:#fff">Merchant Risk<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#737373" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div></div>',
+  switch:'<div class="spec-grid" style="gap:24px"><span style="display:inline-flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;user-select:none" onclick="pvSwitch(this)" title="Click to toggle"><span class="pvtrack" data-on="1" style="width:40px;height:24px;border-radius:100px;background:var(--primary);position:relative;transition:background .15s;flex-shrink:0"><span class="pvknob" style="position:absolute;top:3px;left:19px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:var(--shadow-xs);transition:left .15s"></span></span>Notifications</span><span style="display:inline-flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;user-select:none" onclick="pvSwitch(this)" title="Click to toggle"><span class="pvtrack" data-on="0" style="width:40px;height:24px;border-radius:100px;background:#d4d4d4;position:relative;transition:background .15s;flex-shrink:0"><span class="pvknob" style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:var(--shadow-xs);transition:left .15s"></span></span>Auto-assign</span></div>',
+  checkbox:'<div style="display:flex;flex-direction:column;gap:14px"><label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;user-select:none" onclick="pvCheck(this)"><span class="pvbox" data-on="1" style="width:18px;height:18px;border-radius:5px;background:var(--primary);border:0;display:inline-flex;align-items:center;justify-content:center;transition:.12s;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span>Send eligibility summary</label><label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;user-select:none;color:#3d3d3d" onclick="pvCheck(this)"><span class="pvbox" data-on="0" style="width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border-strong);background:#fff;display:inline-flex;align-items:center;justify-content:center;transition:.12s;flex-shrink:0"></span>Notify primary care provider</label></div>',
+  radio:'<div class="pvradios" style="display:flex;flex-direction:column;gap:14px"><label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;user-select:none" onclick="pvRadio(this)"><span class="pvdot" data-on="1" style="width:18px;height:18px;border-radius:50%;border:5.5px solid var(--primary);background:#fff;transition:.12s;flex-shrink:0;box-sizing:border-box"></span>Standard review</label><label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;user-select:none;color:#3d3d3d" onclick="pvRadio(this)"><span class="pvdot" data-on="0" style="width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border-strong);background:#fff;transition:.12s;flex-shrink:0;box-sizing:border-box"></span>Expedited review</label></div>',
+  input:'<div style="width:100%;max-width:320px"><label for="pvin" style="display:block;font-size:13px;font-weight:500;margin-bottom:6px">Claim number</label><input id="pvin" class="pvinput" placeholder="#0000000" /></div>',
+  select:'<div style="width:100%;max-width:320px;position:relative"><div onclick="pvSel(this)" style="height:40px;border:1px solid var(--input);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:14px;background:#fff;cursor:pointer;user-select:none"><span class="pvselv">Merchant Risk</span><svg class="pvchev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#737373" stroke-width="2" style="transition:transform .2s"><path d="m6 9 6 6 6-6"/></svg></div><div class="pvmenu" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-md);padding:5px;z-index:5"><div class="pvopt" onclick="pvPick(this)">Merchant Risk</div><div class="pvopt" onclick="pvPick(this)">Eligibility</div><div class="pvopt" onclick="pvPick(this)">Care Navigation</div><div class="pvopt" onclick="pvPick(this)">Appeals</div></div></div>',
   card:'<div style="width:300px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);background:#fff"><div style="padding:16px"><div style="font-size:15px;font-weight:650">Eligibility verified</div><div style="font-size:13px;color:var(--muted-foreground);margin-top:4px;line-height:1.5">Coverage confirmed for the requested procedure. Valid through Dec 2026.</div></div><div style="padding:12px 16px;border-top:1px solid var(--border);background:#fcfcfc;display:flex;justify-content:flex-end;gap:8px"><button class="acc-btn acc-btn--ghost acc-btn--sm">Details</button><button class="acc-btn acc-btn--primary acc-btn--sm">Continue</button></div></div>',
-  accordion:'<div style="width:100%;max-width:460px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:#fff"><div style="padding:15px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)"><div><div style="font-weight:600;font-size:14px">Transactions and settlement</div><div style="font-size:12px;color:var(--muted-foreground);margin-top:2px">In progress · Merchant Risk</div></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#737373" stroke-width="2" style="transform:rotate(180deg)"><path d="m6 9 6 6 6-6"/></svg></div><div style="padding:15px 18px;display:flex;align-items:center;justify-content:space-between"><div style="font-weight:600;font-size:14px">Documentation &amp; appeals</div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#737373" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div></div>',
+  accordion:'<div style="width:100%;max-width:460px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:#fff"><div onclick="pvAcc(this)" style="padding:15px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none"><div style="font-weight:600;font-size:14px">Transactions and settlement</div><svg class="pvchev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#737373" stroke-width="2" style="transition:transform .2s;transform:rotate(180deg)"><path d="m6 9 6 6 6-6"/></svg></div><div class="pvaccp" style="display:block;padding:0 18px 15px;font-size:13.5px;color:#3d3d3d;line-height:1.6">Settlement history, batch summaries, and reconciliation status for this merchant.</div><div style="border-top:1px solid var(--border)"></div><div onclick="pvAcc(this)" style="padding:15px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none"><div style="font-weight:600;font-size:14px">Documentation &amp; appeals</div><svg class="pvchev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#737373" stroke-width="2" style="transition:transform .2s"><path d="m6 9 6 6 6-6"/></svg></div><div class="pvaccp" style="display:none;padding:0 18px 15px;font-size:13.5px;color:#3d3d3d;line-height:1.6">Uploaded documents, appeal letters, and review outcomes live here.</div></div>',
   table:'<div style="width:100%;max-width:520px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:#fff;font-size:13px"><div style="display:grid;grid-template-columns:1.4fr 1fr .8fr;background:var(--muted);border-bottom:1px solid var(--border);font-weight:600;font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted-foreground)"><span style="padding:10px 14px">Claim</span><span style="padding:10px 14px">Status</span><span style="padding:10px 14px;text-align:right">Amount</span></div><div style="display:grid;grid-template-columns:1.4fr 1fr .8fr;border-bottom:1px solid var(--border)"><span style="padding:12px 14px;color:var(--primary);font-weight:600">#8218851</span><span style="padding:12px 14px"><span class="acc-badge acc-badge--success">Active</span></span><span style="padding:12px 14px;text-align:right;font-family:var(--mono);font-size:12.5px">$1,240.00</span></div><div style="display:grid;grid-template-columns:1.4fr 1fr .8fr"><span style="padding:12px 14px;color:var(--primary);font-weight:600">#8218852</span><span style="padding:12px 14px"><span class="acc-badge acc-badge--warning">Pending</span></span><span style="padding:12px 14px;text-align:right;font-family:var(--mono);font-size:12.5px">$86.50</span></div></div>',
   tag:'<div class="spec-grid"><span style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 6px 0 12px;border-radius:100px;border:1px solid var(--border-strong);font-size:13px;font-weight:500;background:#fff">Merchant Risk<span style="width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:var(--muted-foreground);background:var(--muted)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span></span><span style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 6px 0 12px;border-radius:100px;border:1px solid var(--border-strong);font-size:13px;font-weight:500;background:#fff">2026<span style="width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:var(--muted-foreground);background:var(--muted)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span></span><span style="font-size:13px;color:var(--primary);font-weight:600;cursor:pointer">Clear all</span></div>',
-  popover:'<div style="width:240px;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:16px;background:#fff"><div style="font-size:14px;font-weight:600">Filter by owner</div><div style="font-size:13px;color:var(--muted-foreground);margin-top:4px;line-height:1.5">Show claims assigned to you, your team, or everyone.</div></div>',
-  drawer:'<div style="width:280px;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);background:#fff;overflow:hidden"><div style="padding:14px 16px;border-bottom:1px solid var(--border);font-weight:650;font-size:14px;display:flex;justify-content:space-between;align-items:center">Claim details<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#737373" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></div><div style="padding:16px;font-size:13px;color:#3d3d3d;line-height:1.6">Full claim history, documents, and audit trail live here in a side panel.</div></div>',
-  progress:'<div style="width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="font-weight:550">Uploading 3 of 5…</span><span style="color:var(--muted-foreground)">64%</span></div><div style="height:8px;border-radius:100px;background:var(--secondary);overflow:hidden"><div style="width:64%;height:100%;border-radius:100px;background:var(--primary)"></div></div></div>',
+  popover:'<div style="position:relative;display:flex;flex-direction:column;align-items:center"><button class="acc-btn acc-btn--outline" onclick="pvPop(this)">Filter by owner</button><div style="display:none;position:absolute;top:calc(100% + 8px);width:240px;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:16px;background:#fff;z-index:5"><div style="font-size:14px;font-weight:600">Filter by owner</div><div style="font-size:13px;color:var(--muted-foreground);margin-top:4px;line-height:1.5">Show claims assigned to you, your team, or everyone.</div></div></div>',
+  drawer:'<button class="acc-btn acc-btn--outline" onclick="openSheet()">Open claim details</button>',
+  progress:'<div style="width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="font-weight:550">Uploading 3 of 5\u2026</span><span class="pvpct" style="color:var(--muted-foreground)">64%</span></div><div style="height:8px;border-radius:100px;background:var(--secondary);overflow:hidden"><div class="pvbar" style="width:64%;height:100%;border-radius:100px;background:var(--primary);transition:width 1.1s cubic-bezier(.2,.8,.2,1)"></div></div><div><button class="acc-btn acc-btn--outline acc-btn--sm" onclick="pvProgress(this)">Replay</button></div></div>',
   skeleton:'<div style="width:100%;max-width:340px;display:flex;gap:14px;align-items:flex-start"><span style="width:40px;height:40px;border-radius:50%;background:linear-gradient(90deg,#eee 25%,#f6f6f6 50%,#eee 75%);background-size:200% 100%;animation:sk 1.5s infinite;flex-shrink:0"></span><div style="flex:1;display:flex;flex-direction:column;gap:9px;padding-top:4px"><span style="height:12px;width:70%;border-radius:6px;background:linear-gradient(90deg,#eee 25%,#f6f6f6 50%,#eee 75%);background-size:200% 100%;animation:sk 1.5s infinite"></span><span style="height:12px;width:95%;border-radius:6px;background:linear-gradient(90deg,#eee 25%,#f6f6f6 50%,#eee 75%);background-size:200% 100%;animation:sk 1.5s infinite"></span><span style="height:12px;width:45%;border-radius:6px;background:linear-gradient(90deg,#eee 25%,#f6f6f6 50%,#eee 75%);background-size:200% 100%;animation:sk 1.5s infinite"></span></div></div><style>@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}</style>',
-  toast:'<div style="width:340px;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);background:#fff;padding:14px 16px;display:flex;gap:12px;align-items:flex-start"><span style="width:20px;height:20px;border-radius:50%;background:#d2ffdb;color:var(--success-fg);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><div style="flex:1"><div style="font-weight:600;font-size:14px">Claim archived</div><div style="font-size:13px;color:var(--muted-foreground);margin-top:1px">Undo available for 30 days.</div></div><span style="font-size:13px;color:var(--primary);font-weight:600;cursor:pointer">Undo</span></div>',
+  toast:'<button class="acc-btn acc-btn--primary" onclick="pvToast(this)">Archive claim</button>',
   dialog:'<div class="anatomy-dialog" style="box-shadow:var(--shadow-xl)"><div class="dialog-head"><div class="dialog-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><circle cx="12" cy="16" r=".6" fill="currentColor"/></svg></div><div class="dialog-titles"><p class="dialog-title">Archive this claim?</p><p class="dialog-sub">Claim #8218851 · Merchant Risk</p></div><button class="dialog-x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><div class="dialog-body">Archiving moves this claim out of the active queue. This action can be undone within 30 days.</div><div class="dialog-foot"><button class="acc-btn acc-btn--ghost acc-btn--sm">Cancel</button><button class="acc-btn acc-btn--primary acc-btn--sm">Archive claim</button></div></div>',
 };
 
@@ -976,10 +1022,17 @@ function renderComponent(art,toc,id){
   let html = crumbsHTML(["Home",sec,sub,name].filter(Boolean)) +
     '<h1 class="page-title">'+name+'</h1>' +
     '<p class="lede">'+c.desc+'</p>' +
+    resRowHTML(id) +
     metaRowHTML(c.updated) +
     '<h2 id="overview">Overview</h2>' +
-    '<p class="section-sub">A live example rendered from Accolade DS 2.0 tokens.</p>' +
+    '<p class="section-sub">A live, interactive example \u2014 the shadcn/ui component re-themed with Accolade DS 2.0 tokens. Click around.</p>' +
     '<div class="canvas">'+(PREVIEW[id]||'<div style="color:var(--muted-foreground);font-size:14px">Preview coming soon.</div>')+'</div>';
+  if(CODE[id]){
+    html += '<h2 id="code">Code</h2><p class="section-sub">Install with the shadcn CLI, then compose. The Accolade theme is applied through CSS variables, so the component renders on-brand out of the box.</p>' +
+      codeBlock('Terminal','pnpm dlx shadcn@latest add '+CODE[id].slug) +
+      codeBlock(CODE[id].fn, CODE[id].code);
+    tocItems.push(["code","Code"]);
+  }
   if(c.anatomy){
     html += '<h2 id="anatomy">Anatomy</h2><p class="section-sub">Numbered annotations map to the legend below.</p>' + c.anatomy() + legendHTML(c.anatomyLegend);
     tocItems.push(["anatomy","Anatomy"]);
@@ -1251,6 +1304,7 @@ function confirmDialog(){
 }
 document.addEventListener('keydown',e=>{
   if(e.key==="Escape"&&document.getElementById('liveOverlay').classList.contains('open')) closeDialog();
+  if(e.key==="Escape"&&document.getElementById('sheetOverlay').classList.contains('open')) closeSheet();
   if((e.metaKey||e.ctrlKey)&&e.key==="k"){e.preventDefault();document.getElementById('searchInput').focus();}
 });
 document.getElementById('liveOverlay').addEventListener('keydown',e=>{
@@ -1266,6 +1320,494 @@ function toggleSidebar(open){
   const sb=document.getElementById('sidebar'), sc=document.getElementById('scrim');
   if(open===undefined) open=!sb.classList.contains('open');
   sb.classList.toggle('open',open); sc.classList.toggle('open',open);
+}
+
+/* ================= shadcn/ui references + code snippets ================= */
+const FIGMA_URL="https://www.figma.com/design/hdsLqiAMGOBpspZkumC5i2/Accolade-Design-System?node-id=20257-2072";
+const CODE={
+button:{slug:"button",fn:"button-demo.tsx",code:`import { Button } from "@/components/ui/button"
+
+export function ButtonDemo() {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <Button>Save changes</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="outline">Outline</Button>
+      <Button variant="ghost">Cancel</Button>
+      <Button variant="destructive">Delete</Button>
+    </div>
+  )
+}`},
+checkbox:{slug:"checkbox",fn:"checkbox-demo.tsx",code:`import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+
+export function CheckboxDemo() {
+  return (
+    <div className="flex items-center gap-2">
+      <Checkbox id="summary" defaultChecked />
+      <Label htmlFor="summary">Send eligibility summary</Label>
+    </div>
+  )
+}`},
+radio:{slug:"radio-group",fn:"radio-group-demo.tsx",code:`import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+
+export function RadioGroupDemo() {
+  return (
+    <RadioGroup defaultValue="standard">
+      <div className="flex items-center gap-2">
+        <RadioGroupItem value="standard" id="r1" />
+        <Label htmlFor="r1">Standard review</Label>
+      </div>
+      <div className="flex items-center gap-2">
+        <RadioGroupItem value="expedited" id="r2" />
+        <Label htmlFor="r2">Expedited review</Label>
+      </div>
+    </RadioGroup>
+  )
+}`},
+input:{slug:"input",fn:"input-demo.tsx",code:`import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+export function InputDemo() {
+  return (
+    <div className="grid w-full max-w-sm gap-2">
+      <Label htmlFor="claim">Claim number</Label>
+      <Input id="claim" placeholder="#0000000" />
+    </div>
+  )
+}`},
+select:{slug:"select",fn:"select-demo.tsx",code:`import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select"
+
+export function SelectDemo() {
+  return (
+    <Select defaultValue="merchant-risk">
+      <SelectTrigger className="w-[220px]">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="merchant-risk">Merchant Risk</SelectItem>
+        <SelectItem value="eligibility">Eligibility</SelectItem>
+        <SelectItem value="care-navigation">Care Navigation</SelectItem>
+        <SelectItem value="appeals">Appeals</SelectItem>
+      </SelectContent>
+    </Select>
+  )
+}`},
+switch:{slug:"switch",fn:"switch-demo.tsx",code:`import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+
+export function SwitchDemo() {
+  return (
+    <div className="flex items-center gap-2">
+      <Switch id="notifications" defaultChecked />
+      <Label htmlFor="notifications">Notifications</Label>
+    </div>
+  )
+}`},
+breadcrumbs:{slug:"breadcrumb",fn:"breadcrumb-demo.tsx",code:`import {
+  Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
+  BreadcrumbPage, BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+
+export function BreadcrumbDemo() {
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/">Home</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/claims">Claims</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>Claim #8218851</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  )
+}`},
+tabs:{slug:"tabs",fn:"tabs-demo.tsx",code:`import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+export function TabsDemo() {
+  return (
+    <Tabs defaultValue="details" className="w-[440px]">
+      <TabsList>
+        <TabsTrigger value="details">Details</TabsTrigger>
+        <TabsTrigger value="documents">Documents</TabsTrigger>
+        <TabsTrigger value="history">History</TabsTrigger>
+      </TabsList>
+      <TabsContent value="details">Claim details panel.</TabsContent>
+      <TabsContent value="documents">Documents list.</TabsContent>
+      <TabsContent value="history">Audit history.</TabsContent>
+    </Tabs>
+  )
+}`},
+pagination:{slug:"pagination",fn:"pagination-demo.tsx",code:`import {
+  Pagination, PaginationContent, PaginationItem,
+  PaginationLink, PaginationNext, PaginationPrevious,
+} from "@/components/ui/pagination"
+
+export function PaginationDemo() {
+  return (
+    <Pagination>
+      <PaginationContent>
+        <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
+        <PaginationItem><PaginationLink href="#">1</PaginationLink></PaginationItem>
+        <PaginationItem><PaginationLink href="#" isActive>2</PaginationLink></PaginationItem>
+        <PaginationItem><PaginationLink href="#">3</PaginationLink></PaginationItem>
+        <PaginationItem><PaginationNext href="#" /></PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  )
+}`},
+accordion:{slug:"accordion",fn:"accordion-demo.tsx",code:`import {
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger,
+} from "@/components/ui/accordion"
+
+export function AccordionDemo() {
+  return (
+    <Accordion type="single" collapsible defaultValue="settlement">
+      <AccordionItem value="settlement">
+        <AccordionTrigger>Transactions and settlement</AccordionTrigger>
+        <AccordionContent>
+          Settlement history, batch summaries, and reconciliation status.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="documentation">
+        <AccordionTrigger>Documentation &amp; appeals</AccordionTrigger>
+        <AccordionContent>
+          Uploaded documents, appeal letters, and review outcomes.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  )
+}`},
+avatar:{slug:"avatar",fn:"avatar-demo.tsx",code:`import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
+export function AvatarDemo() {
+  return (
+    <div className="flex items-center gap-3">
+      <Avatar>
+        <AvatarImage src="/avatars/pratheep.png" alt="Pratheep Kumar" />
+        <AvatarFallback>PC</AvatarFallback>
+      </Avatar>
+      <Avatar>
+        <AvatarFallback>AR</AvatarFallback>
+      </Avatar>
+    </div>
+  )
+}`},
+badge:{slug:"badge",fn:"badge-demo.tsx",code:`import { Badge } from "@/components/ui/badge"
+
+export function BadgeDemo() {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge>Verified</Badge>
+      <Badge variant="secondary">Archived</Badge>
+      <Badge variant="outline">In review</Badge>
+      <Badge variant="destructive">Overdue</Badge>
+    </div>
+  )
+}`},
+card:{slug:"card",fn:"card-demo.tsx",code:`import { Button } from "@/components/ui/button"
+import {
+  Card, CardDescription, CardFooter, CardHeader, CardTitle,
+} from "@/components/ui/card"
+
+export function CardDemo() {
+  return (
+    <Card className="w-[300px]">
+      <CardHeader>
+        <CardTitle>Eligibility verified</CardTitle>
+        <CardDescription>
+          Coverage confirmed for the requested procedure. Valid through Dec 2026.
+        </CardDescription>
+      </CardHeader>
+      <CardFooter className="justify-end gap-2">
+        <Button variant="ghost" size="sm">Details</Button>
+        <Button size="sm">Continue</Button>
+      </CardFooter>
+    </Card>
+  )
+}`},
+table:{slug:"table",fn:"table-demo.tsx",code:`import { Badge } from "@/components/ui/badge"
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+} from "@/components/ui/table"
+
+export function TableDemo() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Claim</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableCell className="font-medium">#8218851</TableCell>
+          <TableCell><Badge>Active</Badge></TableCell>
+          <TableCell className="text-right">$1,240.00</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  )
+}`},
+tag:{slug:"badge",fn:"tag-demo.tsx",code:`import { Badge } from "@/components/ui/badge"
+import { X } from "lucide-react"
+
+export function TagDemo({ onRemove }: { onRemove: () => void }) {
+  return (
+    <Badge variant="outline" className="gap-1 rounded-full pr-1">
+      Merchant Risk
+      <button
+        onClick={onRemove}
+        aria-label="Remove Merchant Risk"
+        className="rounded-full p-0.5 hover:bg-muted"
+      >
+        <X className="size-3" />
+      </button>
+    </Badge>
+  )
+}`},
+alert:{slug:"alert",fn:"alert-demo.tsx",code:`import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Info } from "lucide-react"
+
+export function AlertDemo() {
+  return (
+    <Alert>
+      <Info />
+      <AlertTitle>Eligibility check queued</AlertTitle>
+      <AlertDescription>
+        We will notify the care team when results are ready.
+      </AlertDescription>
+    </Alert>
+  )
+}`},
+dialog:{slug:"dialog",fn:"dialog-demo.tsx",code:`import { Button } from "@/components/ui/button"
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter,
+  DialogHeader, DialogTitle, DialogTrigger,
+} from "@/components/ui/dialog"
+
+export function DialogDemo() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Archive claim…</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Archive this claim?</DialogTitle>
+          <DialogDescription>
+            Archiving moves this claim out of the active queue.
+            This action can be undone within 30 days.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="ghost">Cancel</Button>
+          <Button>Archive claim</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}`},
+drawer:{slug:"sheet",fn:"sheet-demo.tsx",code:`import { Button } from "@/components/ui/button"
+import {
+  Sheet, SheetContent, SheetDescription,
+  SheetHeader, SheetTitle, SheetTrigger,
+} from "@/components/ui/sheet"
+
+export function SheetDemo() {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="outline">Open claim details</Button>
+      </SheetTrigger>
+      <SheetContent side="right">
+        <SheetHeader>
+          <SheetTitle>Claim details</SheetTitle>
+          <SheetDescription>Claim #8218851 · Merchant Risk</SheetDescription>
+        </SheetHeader>
+      </SheetContent>
+    </Sheet>
+  )
+}`},
+popover:{slug:"popover",fn:"popover-demo.tsx",code:`import { Button } from "@/components/ui/button"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+
+export function PopoverDemo() {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="outline">Filter by owner</Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-60">
+        Show claims assigned to you, your team, or everyone.
+      </PopoverContent>
+    </Popover>
+  )
+}`},
+progress:{slug:"progress",fn:"progress-demo.tsx",code:`import { Progress } from "@/components/ui/progress"
+
+export function ProgressDemo() {
+  return <Progress value={64} className="w-[340px]" />
+}`},
+skeleton:{slug:"skeleton",fn:"skeleton-demo.tsx",code:`import { Skeleton } from "@/components/ui/skeleton"
+
+export function SkeletonDemo() {
+  return (
+    <div className="flex items-center gap-4">
+      <Skeleton className="size-10 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-3 w-[200px]" />
+        <Skeleton className="h-3 w-[160px]" />
+      </div>
+    </div>
+  )
+}`},
+toast:{slug:"sonner",fn:"toast-demo.tsx",code:`import { toast } from "sonner"
+import { Button } from "@/components/ui/button"
+
+export function ToastDemo() {
+  return (
+    <Button
+      onClick={() =>
+        toast.success("Claim archived", {
+          description: "Undo available for 30 days.",
+          action: { label: "Undo", onClick: restoreClaim },
+        })
+      }
+    >
+      Archive claim
+    </Button>
+  )
+}`},
+tooltip:{slug:"tooltip",fn:"tooltip-demo.tsx",code:`import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Copy } from "lucide-react"
+
+export function TooltipDemo() {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button variant="outline" size="icon" aria-label="Copy claim ID">
+          <Copy />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>Copy claim ID</TooltipContent>
+    </Tooltip>
+  )
+}`},
+};
+function escapeHtml(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function codeBlock(fn,code,lang){
+  return '<div class="codeblock"><div class="cbar"><span class="tool-dot" style="width:9px;height:9px;border-radius:50%;background:#30363d;display:inline-block"></span><span class="fn">'+fn+'</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code>'+escapeHtml(code)+'</code></pre></div>';
+}
+function copyCode(btn){
+  const code=btn.closest('.codeblock').querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(()=>{btn.textContent="Copied!";setTimeout(()=>btn.textContent="Copy",1400);});
+}
+function resRowHTML(id){
+  const c=CODE[id]; if(!c) return "";
+  const fig='<a class="res-chip" target="_blank" rel="noopener" href="'+FIGMA_URL+'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>Figma</a>';
+  const sh='<a class="res-chip" target="_blank" rel="noopener" href="https://ui.shadcn.com/docs/components/'+c.slug+'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 8V16a2 2 0 0 1-1 1.7l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.7l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8z"/></svg>shadcn/ui · '+c.slug+'</a>';
+  return '<div class="res-row">'+fig+sh+'<span class="res-imp">@/components/ui/'+c.slug+'</span></div>';
+}
+/* ---------- functional preview handlers ---------- */
+const PV_CHECK='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>';
+function pvSwitch(l){
+  const t=l.querySelector('.pvtrack'),k=l.querySelector('.pvknob');
+  const on=t.dataset.on==='1';
+  t.dataset.on=on?'0':'1';
+  t.style.background=on?'#d4d4d4':'var(--primary)';
+  k.style.left=on?'3px':'19px';
+}
+function pvCheck(l){
+  const b=l.querySelector('.pvbox');
+  const on=b.dataset.on==='1';
+  b.dataset.on=on?'0':'1';
+  if(on){b.style.background='#fff';b.style.border='1.5px solid var(--border-strong)';b.innerHTML='';}
+  else{b.style.background='var(--primary)';b.style.border='0';b.innerHTML=PV_CHECK;}
+}
+function pvRadio(l){
+  l.closest('.pvradios').querySelectorAll('.pvdot').forEach(d=>{
+    d.dataset.on='0';d.style.border='1.5px solid var(--border-strong)';
+  });
+  const d=l.querySelector('.pvdot');
+  d.dataset.on='1';d.style.border='5.5px solid var(--primary)';
+}
+function pvTab(b){
+  b.parentElement.querySelectorAll('.pvtab').forEach(t=>{
+    t.style.borderBottomColor='transparent';t.style.color='var(--muted-foreground)';t.style.fontWeight='500';
+  });
+  b.style.borderBottomColor='var(--primary)';b.style.color='var(--primary)';b.style.fontWeight='600';
+  b.parentElement.parentElement.querySelector('.pvtabbody').textContent=b.dataset.txt;
+}
+function pvAcc(h){
+  const p=h.nextElementSibling;
+  const open=p.style.display!=='none';
+  p.style.display=open?'none':'block';
+  const c=h.querySelector('.pvchev');
+  if(c)c.style.transform=open?'':'rotate(180deg)';
+}
+function pvPage(b){
+  b.parentElement.querySelectorAll('.pvpg').forEach(x=>x.className='acc-btn acc-btn--outline acc-btn--sm pvpg');
+  b.className='acc-btn acc-btn--primary acc-btn--sm pvpg';
+  const n=parseInt(b.textContent,10);
+  const range=b.closest('div').parentElement.querySelector('.pvrange');
+  if(range)range.textContent=((n-1)*25+1)+'–'+Math.min(n*25,312)+' of 312';
+}
+function pvPageStep(btn,dir){
+  const pages=[...btn.parentElement.querySelectorAll('.pvpg')];
+  const i=pages.findIndex(x=>x.classList.contains('acc-btn--primary'));
+  const next=pages[i+dir];
+  if(next)pvPage(next);
+}
+function pvSel(t){
+  const m=t.parentElement.querySelector('.pvmenu');
+  m.style.display=m.style.display==='none'?'block':'none';
+}
+function pvPick(o){
+  const root=o.closest('.pvmenu').parentElement;
+  root.querySelector('.pvselv').textContent=o.textContent;
+  o.closest('.pvmenu').style.display='none';
+}
+function pvPop(b){
+  const p=b.nextElementSibling;
+  p.style.display=p.style.display==='none'?'block':'none';
+}
+function pvToast(btn){
+  const cv=btn.closest('.canvas');
+  const t=document.createElement('div');
+  t.style.cssText='position:absolute;bottom:16px;right:16px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);padding:12px 16px;display:flex;gap:10px;align-items:flex-start;font-size:13.5px;max-width:300px;animation:fade .2s ease;z-index:4';
+  t.innerHTML='<span style="width:20px;height:20px;border-radius:50%;background:#d2ffdb;color:var(--success-fg);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><b style="display:block;font-size:13.5px">Claim archived</b><span style="color:var(--muted-foreground);font-size:12.5px">Undo available for 30 days.</span></span>';
+  cv.appendChild(t);
+  setTimeout(()=>{t.style.transition='opacity .3s';t.style.opacity='0';setTimeout(()=>t.remove(),320);},2600);
+}
+function pvProgress(btn){
+  const wrap=btn.closest('div').parentElement;
+  const bar=wrap.querySelector('.pvbar'),pct=wrap.querySelector('.pvpct');
+  bar.style.transition='none';bar.style.width='0%';pct.textContent='0%';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    bar.style.transition='width 1.1s cubic-bezier(.2,.8,.2,1)';bar.style.width='64%';
+    setTimeout(()=>pct.textContent='64%',1100);
+  }));
+}
+function openSheet(){
+  document.getElementById('sheetOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeSheet(){
+  document.getElementById('sheetOverlay').classList.remove('open');
+  document.body.style.overflow='';
 }
 
 /* ---------- Boot ---------- */
