@@ -1022,14 +1022,12 @@ function renderComponent(art,toc,id){
   let html = crumbsHTML(["Home",sec,sub,name].filter(Boolean)) +
     '<h1 class="page-title">'+name+'</h1>' +
     '<p class="lede">'+c.desc+'</p>' +
-    resRowHTML(id) +
     metaRowHTML(c.updated) +
     '<h2 id="overview">Overview</h2>' +
-    '<p class="section-sub">A live, interactive example \u2014 the shadcn/ui component re-themed with Accolade DS 2.0 tokens. Click around.</p>' +
+    '<p class="section-sub">A live, interactive example built from Accolade DS 2.0 tokens. Click around.</p>' +
     '<div class="canvas">'+(PREVIEW[id]||'<div style="color:var(--muted-foreground);font-size:14px">Preview coming soon.</div>')+'</div>';
   if(CODE[id]){
-    html += '<h2 id="code">Code</h2><p class="section-sub">Install with the shadcn CLI, then compose. The Accolade theme is applied through CSS variables, so the component renders on-brand out of the box.</p>' +
-      codeBlock('Terminal','pnpm dlx shadcn@latest add '+CODE[id].slug) +
+    html += '<h2 id="code">Code</h2><p class="section-sub">Import from the Accolade UI package and compose. Theme tokens are applied automatically, so the component renders on-brand.</p>' +
       codeBlock(CODE[id].fn, CODE[id].code);
     tocItems.push(["code","Code"]);
   }
@@ -1322,10 +1320,10 @@ function toggleSidebar(open){
   sb.classList.toggle('open',open); sc.classList.toggle('open',open);
 }
 
-/* ================= shadcn/ui references + code snippets ================= */
+/* ================= component code snippets ================= */
 const FIGMA_URL="https://www.figma.com/design/hdsLqiAMGOBpspZkumC5i2/Accolade-Design-System?node-id=20257-2072";
 const CODE={
-button:{slug:"button",fn:"button-demo.tsx",code:`import { Button } from "@/components/ui/button"
+button:{slug:"button",fn:"button-demo.tsx",code:`import { Button } from "@accolade/ui"
 
 export function ButtonDemo() {
   return (
@@ -1338,8 +1336,8 @@ export function ButtonDemo() {
     </div>
   )
 }`},
-checkbox:{slug:"checkbox",fn:"checkbox-demo.tsx",code:`import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+checkbox:{slug:"checkbox",fn:"checkbox-demo.tsx",code:`import { Checkbox } from "@accolade/ui"
+import { Label } from "@accolade/ui"
 
 export function CheckboxDemo() {
   return (
@@ -1349,8 +1347,8 @@ export function CheckboxDemo() {
     </div>
   )
 }`},
-radio:{slug:"radio-group",fn:"radio-group-demo.tsx",code:`import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
+radio:{slug:"radio-group",fn:"radio-group-demo.tsx",code:`import { RadioGroup, RadioGroupItem } from "@accolade/ui"
+import { Label } from "@accolade/ui"
 
 export function RadioGroupDemo() {
   return (
@@ -1366,8 +1364,8 @@ export function RadioGroupDemo() {
     </RadioGroup>
   )
 }`},
-input:{slug:"input",fn:"input-demo.tsx",code:`import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+input:{slug:"input",fn:"input-demo.tsx",code:`import { Input } from "@accolade/ui"
+import { Label } from "@accolade/ui"
 
 export function InputDemo() {
   return (
@@ -1379,7 +1377,7 @@ export function InputDemo() {
 }`},
 select:{slug:"select",fn:"select-demo.tsx",code:`import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select"
+} from "@accolade/ui"
 
 export function SelectDemo() {
   return (
@@ -1396,8 +1394,8 @@ export function SelectDemo() {
     </Select>
   )
 }`},
-switch:{slug:"switch",fn:"switch-demo.tsx",code:`import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
+switch:{slug:"switch",fn:"switch-demo.tsx",code:`import { Switch } from "@accolade/ui"
+import { Label } from "@accolade/ui"
 
 export function SwitchDemo() {
   return (
@@ -1410,7 +1408,7 @@ export function SwitchDemo() {
 breadcrumbs:{slug:"breadcrumb",fn:"breadcrumb-demo.tsx",code:`import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
   BreadcrumbPage, BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@accolade/ui"
 
 export function BreadcrumbDemo() {
   return (
@@ -1431,7 +1429,7 @@ export function BreadcrumbDemo() {
     </Breadcrumb>
   )
 }`},
-tabs:{slug:"tabs",fn:"tabs-demo.tsx",code:`import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+tabs:{slug:"tabs",fn:"tabs-demo.tsx",code:`import { Tabs, TabsContent, TabsList, TabsTrigger } from "@accolade/ui"
 
 export function TabsDemo() {
   return (
@@ -1450,7 +1448,7 @@ export function TabsDemo() {
 pagination:{slug:"pagination",fn:"pagination-demo.tsx",code:`import {
   Pagination, PaginationContent, PaginationItem,
   PaginationLink, PaginationNext, PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@accolade/ui"
 
 export function PaginationDemo() {
   return (
@@ -1467,7 +1465,7 @@ export function PaginationDemo() {
 }`},
 accordion:{slug:"accordion",fn:"accordion-demo.tsx",code:`import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@accolade/ui"
 
 export function AccordionDemo() {
   return (
@@ -1487,7 +1485,7 @@ export function AccordionDemo() {
     </Accordion>
   )
 }`},
-avatar:{slug:"avatar",fn:"avatar-demo.tsx",code:`import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+avatar:{slug:"avatar",fn:"avatar-demo.tsx",code:`import { Avatar, AvatarFallback, AvatarImage } from "@accolade/ui"
 
 export function AvatarDemo() {
   return (
@@ -1502,7 +1500,7 @@ export function AvatarDemo() {
     </div>
   )
 }`},
-badge:{slug:"badge",fn:"badge-demo.tsx",code:`import { Badge } from "@/components/ui/badge"
+badge:{slug:"badge",fn:"badge-demo.tsx",code:`import { Badge } from "@accolade/ui"
 
 export function BadgeDemo() {
   return (
@@ -1514,10 +1512,10 @@ export function BadgeDemo() {
     </div>
   )
 }`},
-card:{slug:"card",fn:"card-demo.tsx",code:`import { Button } from "@/components/ui/button"
+card:{slug:"card",fn:"card-demo.tsx",code:`import { Button } from "@accolade/ui"
 import {
   Card, CardDescription, CardFooter, CardHeader, CardTitle,
-} from "@/components/ui/card"
+} from "@accolade/ui"
 
 export function CardDemo() {
   return (
@@ -1535,10 +1533,10 @@ export function CardDemo() {
     </Card>
   )
 }`},
-table:{slug:"table",fn:"table-demo.tsx",code:`import { Badge } from "@/components/ui/badge"
+table:{slug:"table",fn:"table-demo.tsx",code:`import { Badge } from "@accolade/ui"
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from "@/components/ui/table"
+} from "@accolade/ui"
 
 export function TableDemo() {
   return (
@@ -1560,7 +1558,7 @@ export function TableDemo() {
     </Table>
   )
 }`},
-tag:{slug:"badge",fn:"tag-demo.tsx",code:`import { Badge } from "@/components/ui/badge"
+tag:{slug:"badge",fn:"tag-demo.tsx",code:`import { Badge } from "@accolade/ui"
 import { X } from "lucide-react"
 
 export function TagDemo({ onRemove }: { onRemove: () => void }) {
@@ -1577,7 +1575,7 @@ export function TagDemo({ onRemove }: { onRemove: () => void }) {
     </Badge>
   )
 }`},
-alert:{slug:"alert",fn:"alert-demo.tsx",code:`import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+alert:{slug:"alert",fn:"alert-demo.tsx",code:`import { Alert, AlertDescription, AlertTitle } from "@accolade/ui"
 import { Info } from "lucide-react"
 
 export function AlertDemo() {
@@ -1591,11 +1589,11 @@ export function AlertDemo() {
     </Alert>
   )
 }`},
-dialog:{slug:"dialog",fn:"dialog-demo.tsx",code:`import { Button } from "@/components/ui/button"
+dialog:{slug:"dialog",fn:"dialog-demo.tsx",code:`import { Button } from "@accolade/ui"
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle, DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@accolade/ui"
 
 export function DialogDemo() {
   return (
@@ -1619,11 +1617,11 @@ export function DialogDemo() {
     </Dialog>
   )
 }`},
-drawer:{slug:"sheet",fn:"sheet-demo.tsx",code:`import { Button } from "@/components/ui/button"
+drawer:{slug:"sheet",fn:"sheet-demo.tsx",code:`import { Button } from "@accolade/ui"
 import {
   Sheet, SheetContent, SheetDescription,
   SheetHeader, SheetTitle, SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@accolade/ui"
 
 export function SheetDemo() {
   return (
@@ -1640,8 +1638,8 @@ export function SheetDemo() {
     </Sheet>
   )
 }`},
-popover:{slug:"popover",fn:"popover-demo.tsx",code:`import { Button } from "@/components/ui/button"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+popover:{slug:"popover",fn:"popover-demo.tsx",code:`import { Button } from "@accolade/ui"
+import { Popover, PopoverContent, PopoverTrigger } from "@accolade/ui"
 
 export function PopoverDemo() {
   return (
@@ -1655,12 +1653,12 @@ export function PopoverDemo() {
     </Popover>
   )
 }`},
-progress:{slug:"progress",fn:"progress-demo.tsx",code:`import { Progress } from "@/components/ui/progress"
+progress:{slug:"progress",fn:"progress-demo.tsx",code:`import { Progress } from "@accolade/ui"
 
 export function ProgressDemo() {
   return <Progress value={64} className="w-[340px]" />
 }`},
-skeleton:{slug:"skeleton",fn:"skeleton-demo.tsx",code:`import { Skeleton } from "@/components/ui/skeleton"
+skeleton:{slug:"skeleton",fn:"skeleton-demo.tsx",code:`import { Skeleton } from "@accolade/ui"
 
 export function SkeletonDemo() {
   return (
@@ -1673,8 +1671,8 @@ export function SkeletonDemo() {
     </div>
   )
 }`},
-toast:{slug:"sonner",fn:"toast-demo.tsx",code:`import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
+toast:{slug:"sonner",fn:"toast-demo.tsx",code:`import { toast } from "@accolade/ui"
+import { Button } from "@accolade/ui"
 
 export function ToastDemo() {
   return (
@@ -1690,8 +1688,8 @@ export function ToastDemo() {
     </Button>
   )
 }`},
-tooltip:{slug:"tooltip",fn:"tooltip-demo.tsx",code:`import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+tooltip:{slug:"tooltip",fn:"tooltip-demo.tsx",code:`import { Button } from "@accolade/ui"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@accolade/ui"
 import { Copy } from "lucide-react"
 
 export function TooltipDemo() {
@@ -1715,12 +1713,7 @@ function copyCode(btn){
   const code=btn.closest('.codeblock').querySelector('code').innerText;
   navigator.clipboard.writeText(code).then(()=>{btn.textContent="Copied!";setTimeout(()=>btn.textContent="Copy",1400);});
 }
-function resRowHTML(id){
-  const c=CODE[id]; if(!c) return "";
-  const fig='<a class="res-chip" target="_blank" rel="noopener" href="'+FIGMA_URL+'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>Figma</a>';
-  const sh='<a class="res-chip" target="_blank" rel="noopener" href="https://ui.shadcn.com/docs/components/'+c.slug+'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 8V16a2 2 0 0 1-1 1.7l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.7l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8z"/></svg>shadcn/ui · '+c.slug+'</a>';
-  return '<div class="res-row">'+fig+sh+'<span class="res-imp">@/components/ui/'+c.slug+'</span></div>';
-}
+function resRowHTML(id){ return ""; }
 /* ---------- functional preview handlers ---------- */
 const PV_CHECK='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>';
 function pvSwitch(l){
