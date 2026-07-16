@@ -6,5 +6,8 @@
   "scripts": {
     "dev": "node dev-server.mjs",
     "start": "node dev-server.mjs"
+  },
+  "devDependencies": {
+    "shadcn": "^4.13.0"
   }
 }
