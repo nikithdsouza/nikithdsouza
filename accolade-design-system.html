@@ -6,7 +6,7 @@
 <title>Accolade Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
 :root{
   --background:#ffffff;
@@ -32,10 +32,10 @@
   --brand-800:#003444;
   --brand-900:#001a28;
 
-  --success-fg:#006400; --success-bg:#e9f9ec;
-  --warning-fg:#7a4d00; --warning-bg:#fff2c2;
-  --info-fg:#1e40af;   --info-bg:#dbeafe;
-  --error-fg:#b5001a;  --error-bg:#fdeeea;
+  --success-fg:#15803d; --success-bg:#f0fdf4;
+  --warning-fg:#b45309; --warning-bg:#fffbeb;
+  --info-fg:#1d4ed8;   --info-bg:#eff6ff;
+  --error-fg:#b91c1c;  --error-bg:#fef2f2;
 
   --radius-sm:6px;
   --radius-md:8px;
@@ -50,7 +50,7 @@
   --sidebar-w:280px;
   --toc-w:210px;
   --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
@@ -257,6 +257,15 @@ button{font-family:inherit;cursor:pointer;}
 
 /* intro cards */
 .intro-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0;}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;margin:8px 0 6px;}
+.hero h1{font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1.04;margin:0 0 16px;}
+.hero .lede{font-size:17px;color:var(--muted-foreground);max-width:46ch;margin:0 0 26px;}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;}
+.deco{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.deco .dcard{border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--card);box-shadow:var(--shadow-xs);padding:16px;min-height:104px;display:flex;flex-direction:column;gap:9px;justify-content:center;}
+.deco .sk{height:9px;border-radius:6px;background:var(--muted);}
+.icard .ic.green{background:var(--success-bg);color:#15803d;}
+@media(max-width:900px){.hero{grid-template-columns:1fr;gap:28px;}.deco{max-width:420px;}}
 .icard{border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;transition:.16s;cursor:pointer;background:var(--card);}
 .icard:hover{border-color:var(--border-strong);box-shadow:var(--shadow-sm);transform:translateY(-2px);}
 .icard .ic{width:38px;height:38px;border-radius:var(--radius-md);background:var(--brand-50);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
@@ -333,12 +342,33 @@ button{font-family:inherit;cursor:pointer;}
 .ph-content .s{font-size:12.5px;color:#5f7c83;margin-top:2px;}
 
 /* code blocks (zeroheight-style) */
-.codeblock{position:relative;margin:14px 0;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:#0d1117;}
-.codeblock .cbar{display:flex;align-items:center;gap:7px;padding:8px 12px;border-bottom:1px solid #21262d;}
-.codeblock .cbar .fn{font-size:12px;color:#8b949e;font-family:var(--mono);}
-.copy-btn{margin-left:auto;font-size:11px;color:#8b949e;background:#161b22;border:1px solid #21262d;border-radius:5px;padding:3px 9px;transition:.14s;cursor:pointer;}
-.copy-btn:hover{color:#e6edf3;background:#21262d;}
-.codeblock pre{margin:0;padding:16px 18px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.7;color:#e6edf3;}
+.codeblock{position:relative;margin:16px 0;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:visible;background:var(--card);box-shadow:var(--shadow-xs);}
+.codeblock .cbar{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);}
+.codeblock .cbar .fn{font-size:12.5px;color:var(--muted-foreground);font-family:var(--mono);letter-spacing:.02em;}
+.cbar-actions{margin-left:auto;display:flex;align-items:center;gap:6px;position:relative;}
+.cbar-btn{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#404040;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:5px 10px;transition:.14s;cursor:pointer;font-weight:500;letter-spacing:-.01em;}
+.cbar-btn:hover{background:var(--muted);border-color:var(--border-strong);}
+.cbar-btn.ghost{border-color:transparent;background:transparent;color:var(--muted-foreground);}
+.cbar-btn.ghost:hover{background:var(--muted);color:var(--foreground);}
+.openin-menu{position:absolute;top:calc(100% + 6px);right:0;min-width:190px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:6px;z-index:30;display:none;}
+.openin-menu.open{display:block;}
+.openin-menu .oi-h{font-size:11px;font-weight:600;color:var(--muted-foreground);padding:6px 10px 4px;}
+.openin-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-md);font-size:13.5px;cursor:pointer;color:var(--foreground);}
+.openin-item:hover{background:var(--muted);}
+.openin-item .oi-ic{width:20px;height:20px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.codeblock pre{margin:0;padding:16px 18px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:#1f2328;background:#fbfbfb;}
+.c-com{color:#6b7280;font-style:italic;}
+.c-tag{color:var(--primary);}
+.c-attr{color:#8250df;}
+.c-str{color:#a24700;}
+.c-key{color:#cf222e;}
+.c-punc{color:#57606a;}
+/* size selector chips (Button page) */
+.size-row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 18px;}
+.size-chip{font-family:var(--mono);font-size:12.5px;color:#404040;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:7px 13px;cursor:pointer;transition:.14s;letter-spacing:-.01em;}
+.size-chip:hover{background:var(--muted);}
+.size-chip.active{background:var(--muted);border-color:var(--foreground);color:var(--foreground);font-weight:600;box-shadow:0 0 0 1px var(--foreground) inset;}
+.dashcanvas{border:1.5px dashed var(--border-strong);border-radius:var(--radius-lg);background:var(--card);padding:56px 32px;display:flex;align-items:center;justify-content:center;min-height:150px;}
 /* resources row */
 .res-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 0;}
 .res-chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:100px;font-size:12.5px;font-weight:550;color:#333;border:1px solid var(--border);background:var(--background);transition:.14s;letter-spacing:-.01em;}
@@ -1023,13 +1053,21 @@ function renderComponent(art,toc,id){
     '<h1 class="page-title">'+name+'</h1>' +
     '<p class="lede">'+c.desc+'</p>' +
     metaRowHTML(c.updated) +
-    '<h2 id="overview">Overview</h2>' +
-    '<p class="section-sub">A live, interactive example built from Accolade DS 2.0 tokens. Click around.</p>' +
-    '<div class="canvas">'+(PREVIEW[id]||'<div style="color:var(--muted-foreground);font-size:14px">Preview coming soon.</div>')+'</div>';
-  if(CODE[id]){
-    html += '<h2 id="code">Code</h2><p class="section-sub">Import from the Accolade UI package and compose. Theme tokens are applied automatically, so the component renders on-brand.</p>' +
-      codeBlock(CODE[id].fn, CODE[id].code);
+    '<h2 id="overview">Overview</h2>';
+  if(id==='button'){
+    html += '<p class="section-sub">Default variant \u2014 primary action, strongest emphasis. Use one per region when possible. Pick a size to preview and copy the code.</p>' +
+      buttonSizeUI() +
+      '<h2 id="code">Code</h2><p class="section-sub">Import from the Accolade UI package and compose. Theme tokens apply automatically.</p>' +
+      codeBlock('button-demo.tsx', btnCodeFor('xl'), 'btnCode');
     tocItems.push(["code","Code"]);
+  } else {
+    html += '<p class="section-sub">A live, interactive example built from Accolade DS 2.0 tokens. Click around.</p>' +
+      '<div class="canvas">'+(PREVIEW[id]||'<div style="color:var(--muted-foreground);font-size:14px">Preview coming soon.</div>')+'</div>';
+    if(CODE[id]){
+      html += '<h2 id="code">Code</h2><p class="section-sub">Import from the Accolade UI package and compose. Theme tokens apply automatically, so the component renders on-brand.</p>' +
+        codeBlock(CODE[id].fn, CODE[id].code);
+      tocItems.push(["code","Code"]);
+    }
   }
   if(c.anatomy){
     html += '<h2 id="anatomy">Anatomy</h2><p class="section-sub">Numbered annotations map to the legend below.</p>' + c.anatomy() + legendHTML(c.anatomyLegend);
@@ -1059,26 +1097,34 @@ function renderComponent(art,toc,id){
 
 /* ---------- Getting started ---------- */
 function renderIntro(art,toc){
+  const arrow='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:2px"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
   art.innerHTML = crumbsHTML(["Home","Getting started","Introduction"]) +
-    '<h1 class="page-title">Accolade Design System</h1>' +
-    '<p class="lede">The shared language behind Accolade’s member and care-team products — tokens, components, and patterns that keep every experience consistent, accessible, and fast to build.</p>' +
+    '<section class="hero">' +
+      '<div>' +
+        '<h1>Accolade Design System</h1>' +
+        '<p class="lede">Pull in the components, grab the right tokens, and build Accolade experiences that feel fast, reliable, and consistent.</p>' +
+        '<div class="hero-cta">' +
+          '<button class="acc-btn acc-btn--primary" onclick="go(\'button\')">Start building '+arrow+'</button>' +
+          '<button class="acc-btn acc-btn--outline" onclick="go(\'changelog\')">See what\u2019s new '+arrow+'</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="deco">' +
+        '<div class="dcard"><div class="sk" style="width:40%"></div><div class="sk" style="width:80%"></div><div class="sk" style="width:65%"></div></div>' +
+        '<div class="dcard" style="justify-content:flex-start"><div style="height:36px;border:1px solid var(--input);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:space-between;padding:0 11px;font-size:13px;color:var(--foreground)">Components<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#737373" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div></div>' +
+        '<div class="dcard"><div style="display:flex;height:26px;border-radius:6px;overflow:hidden;border:1px solid var(--border)"><div style="flex:1;background:#dffbff"></div><div style="flex:1;background:#85b1bd"></div><div style="flex:1;background:#448393"></div><div style="flex:1;background:#206c7e"></div><div style="flex:1;background:#005061"></div><div style="flex:1;background:#003444"></div></div><div class="sk" style="width:55%"></div></div>' +
+        '<div class="dcard" style="align-items:flex-start"><div style="display:inline-flex;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden"><span style="padding:7px 10px;background:var(--muted);color:var(--primary)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><span style="padding:7px 10px;color:var(--muted-foreground)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span></div></div>' +
+      '</div>' +
+    '</section>' +
     metaRowHTML(PAGE_META.introduction.updated) +
-    '<div class="hero-metrics">' +
-      '<div class="metric"><div class="v">23</div><div class="l">Components</div></div>' +
-      '<div class="metric"><div class="v">64</div><div class="l">Mode tokens</div></div>' +
-      '<div class="metric"><div class="v">WCAG AA</div><div class="l">Accessibility target</div></div>' +
-      '<div class="metric"><div class="v">v2.0</div><div class="l">Current release</div></div>' +
-    '</div>' +
     '<h2 id="explore">Explore the system</h2>' +
-    '<p class="section-sub">Foundations, components, and patterns — organized for discovery.</p>' +
+    '<p class="section-sub">Foundations, components, and patterns \u2014 organized for discovery.</p>' +
     '<div class="intro-cards">' +
-      '<div class="icard" onclick="go(\'colors\')"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18c1.7 0 2-1.5 1-2.5s-.7-2.5 1-2.5h1.5A3.5 3.5 0 0 0 20 12 8 8 0 0 0 12 3z"/></svg></div><h3>Foundations</h3><p>Color, typography, spacing, radius, elevation, and iconography — the raw material for every screen.</p></div>' +
-      '<div class="icard" onclick="go(\'button\')"><div class="ic">'+ICONS.box+'</div><h3>Components</h3><p>Reusable, accessible building blocks for interaction, data entry, and navigation.</p></div>' +
-      '<div class="icard" onclick="go(\'forms\')"><div class="ic">'+ICONS.grid+'</div><h3>Patterns</h3><p>Composed layouts that solve recurring product problems end to end.</p></div>' +
+      '<div class="icard" onclick="go(\'colors\')"><div class="ic green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="12" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 1 0 0 20 2 2 0 0 0 2-2v-1a2 2 0 0 1 2-2h1a4 4 0 0 0 4-4 10 10 0 0 0-9-9z"/></svg></div><h3>Foundations</h3><p>Colors, typography, spacing and layout, radius, elevation, and iconography.</p></div>' +
+      '<div class="icard" onclick="go(\'button\')"><div class="ic green">'+ICONS.box+'</div><h3>Components</h3><p>Reusable building blocks for interaction, data entry, and navigation.</p></div>' +
+      '<div class="icard" onclick="go(\'forms\')"><div class="ic green">'+ICONS.grid+'</div><h3>Patterns</h3><p>Composed interaction and layout patterns for complete product experiences.</p></div>' +
     '</div>' +
     '<h2 id="start">Where to start</h2>' +
-    '<p>Designers: open the <a class="inline-link" href="https://www.figma.com/design/hdsLqiAMGOBpspZkumC5i2/Accolade-Design-System?node-id=20257-2072" target="_blank" rel="noopener">Figma library</a> and enable the DS 2.0 file in your project. Engineers: read <span class="inline-link" onclick="go(\'colors\')">Foundations</span> first, then browse components — every page documents anatomy, usage, do’s and don’ts, and accessibility behavior.</p>' +
-    '<div class="callout"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><circle cx="12" cy="16" r=".6" fill="currentColor"/></svg><div>New here? Start with <span class="inline-link" onclick="go(\'colors\')">Colors</span>, then open <span class="inline-link" onclick="go(\'dialog\')">Dialog</span> to see a fully documented component with a working live demo.</div></div>';
+    '<p>Designers: open the <a class="inline-link" href="https://www.figma.com/design/hdsLqiAMGOBpspZkumC5i2/Accolade-Design-System?node-id=20257-2072" target="_blank" rel="noopener">Figma library</a> and enable the DS 2.0 file in your project. Engineers: read <span class="inline-link" onclick="go(\'colors\')">Foundations</span> first, then browse components \u2014 every page documents the anatomy, usage, do\u2019s and don\u2019ts, and accessibility behavior.</p>';
   toc.innerHTML = tocHTML([["explore","Explore the system"],["start","Where to start"]]);
 }
 
@@ -1706,14 +1752,69 @@ export function TooltipDemo() {
 }`},
 };
 function escapeHtml(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-function codeBlock(fn,code,lang){
-  return '<div class="codeblock"><div class="cbar"><span class="tool-dot" style="width:9px;height:9px;border-radius:50%;background:#30363d;display:inline-block"></span><span class="fn">'+fn+'</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code>'+escapeHtml(code)+'</code></pre></div>';
+const OPENIN=[
+  ["Bolt","#000000","b"],["v0","#000000","v0"],["Replit","#F26207","R"],
+  ["Lovable","#FF4785","L"],["Cursor","#000000","C"],
+];
+function highlightTSX(code){
+  let h=escapeHtml(code);
+  const store=[];
+  const stash=(cls,txt)=>{store.push('<span class="'+cls+'">'+txt+'</span>');return ' '+(store.length-1)+' ';};
+  h=h.replace(/\/\/[^\n]*/g,m=>stash('c-com',m));      // line comments
+  h=h.replace(/"[^"\n]*"/g,m=>stash('c-str',m));        // strings
+  h=h.replace(/(\s)([A-Za-z][\w-]*)(=)/g,(m,a,b,c)=>a+'<span class="c-attr">'+b+'</span>'+c); // attrs
+  h=h.replace(/(&lt;\/?)([A-Za-z][\w.]*)/g,(m,a,b)=>a+'<span class="c-tag">'+b+'</span>');    // tags
+  h=h.replace(/\b(import|from|export|function|return|const|default|true|false)\b/g,'<span class="c-key">$1</span>');
+  h=h.replace(/ (\d+) /g,(m,i)=>store[+i]);   // restore
+  return h;
+}
+function codeBlock(fn,code){
+  const menu='<div class="openin-menu"><div class="oi-h">Open In</div>'+OPENIN.map(o=>
+    '<div class="openin-item" onclick="openInTool(this,\''+o[0]+'\')"><span class="oi-ic" style="background:'+o[1]+'">'+o[2]+'</span>Open in '+o[0]+'</div>').join('')+'</div>';
+  return '<div class="codeblock"><div class="cbar"><span class="fn">'+fn+'</span><div class="cbar-actions">'+
+    '<button class="cbar-btn ghost" onclick="toggleOpenIn(this)">Open In <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>'+
+    '<button class="cbar-btn" onclick="copyCode(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy Code</button>'+
+    menu+'</div></div><pre><code'+(arguments[2]?' id="'+arguments[2]+'"':'')+'>'+highlightTSX(code)+'</code></pre></div>';
 }
 function copyCode(btn){
   const code=btn.closest('.codeblock').querySelector('code').innerText;
-  navigator.clipboard.writeText(code).then(()=>{btn.textContent="Copied!";setTimeout(()=>btn.textContent="Copy",1400);});
+  navigator.clipboard.writeText(code).then(()=>{const o=btn.innerHTML;btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>Copied';setTimeout(()=>btn.innerHTML=o,1400);});
 }
+function toggleOpenIn(btn){
+  const m=btn.parentElement.querySelector('.openin-menu');
+  document.querySelectorAll('.openin-menu.open').forEach(x=>{if(x!==m)x.classList.remove('open');});
+  m.classList.toggle('open');
+}
+function openInTool(item,tool){
+  const code=item.closest('.codeblock').querySelector('code').innerText;
+  navigator.clipboard.writeText(code);
+  item.closest('.openin-menu').classList.remove('open');
+  const t=item.textContent;item.textContent='Copied for '+tool;setTimeout(()=>item.textContent=t,1300);
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.cbar-actions'))document.querySelectorAll('.openin-menu.open').forEach(x=>x.classList.remove('open'));});
 function resRowHTML(id){ return ""; }
+/* ---------- Button size selector ---------- */
+const BTN_SIZES=[["2xs","2XS",24,"0 10px","12px"],["sm","SM",32,"0 12px","13px"],["md","MD",36,"0 14px","14px"],["lg","LG",40,"0 18px","14px"],["xl","XL",48,"0 22px","15px"]];
+function buttonSizeUI(){
+  const chips='<div class="size-row">'+BTN_SIZES.map(z=>
+    '<button class="size-chip'+(z[0]==='xl'?' active':'')+'" data-sz="'+z[0]+'" onclick="pvBtnSize(this,\''+z[0]+'\')">'+z[1]+' \u00b7 '+z[2]+'px</button>').join('')+'</div>';
+  const z=BTN_SIZES.find(x=>x[0]==='xl');
+  const btn='<div class="dashcanvas"><button id="pvBtnEl" class="acc-btn acc-btn--primary" style="height:'+z[2]+'px;padding:'+z[3]+';font-size:'+z[4]+'">Button</button></div>';
+  return chips+btn;
+}
+function btnCodeFor(sz){
+  const z=BTN_SIZES.find(x=>x[0]===sz);
+  return '// size="'+sz+'" \u2192 '+z[2]+'px control height\n<Button variant="default" size="'+sz+'">\n  Button\n</Button>';
+}
+function pvBtnSize(el,sz){
+  el.parentElement.querySelectorAll('.size-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const z=BTN_SIZES.find(x=>x[0]===sz);
+  const b=document.getElementById('pvBtnEl');
+  if(b){b.style.height=z[2]+'px';b.style.padding=z[3];b.style.fontSize=z[4];}
+  const code=document.getElementById('btnCode');
+  if(code)code.innerHTML=highlightTSX(btnCodeFor(sz));
+}
 /* ---------- functional preview handlers ---------- */
 const PV_CHECK='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>';
 function pvSwitch(l){
