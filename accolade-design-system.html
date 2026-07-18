@@ -35,6 +35,7 @@
   --success-fg:#15803d; --success-bg:#f0fdf4;
   --warning-fg:#b45309; --warning-bg:#fffbeb;
   --info-fg:#1d4ed8;   --info-bg:#eff6ff;
+  --sidebar-primary-accent:rgba(0,80,97,.08);
   --error-fg:#b91c1c;  --error-bg:#fef2f2;
 
   --radius-sm:6px;
@@ -108,7 +109,7 @@ button{font-family:inherit;cursor:pointer;}
 /* ---------- Sidebar with collapsible accordions ---------- */
 .sidebar{
   position:sticky;top:60px;height:calc(100vh - 60px);
-  border-right:1px solid var(--border);background:#fcfcfc;
+  border-right:1px solid #e5e5e5;background:#fafafa;
   overflow-y:auto;padding:14px 12px 60px;
 }
 .sidebar::-webkit-scrollbar{width:9px;}
@@ -119,7 +120,7 @@ button{font-family:inherit;cursor:pointer;}
 .acc-head{
   width:100%;display:flex;align-items:center;gap:9px;
   padding:9px 10px;border:0;background:none;border-radius:var(--radius-md);
-  font-size:13px;font-weight:650;letter-spacing:-.005em;color:#262626;
+  font-size:13px;font-weight:600;letter-spacing:-.005em;color:#171717;
   transition:background .12s;text-align:left;
 }
 .acc-head:hover{background:var(--muted);}
@@ -131,13 +132,12 @@ button{font-family:inherit;cursor:pointer;}
 .acc-inner{padding:2px 0 8px;}
 .nav-item{
   display:flex;align-items:center;gap:9px;
-  margin:1px 0 1px 14px;padding:6px 10px;border-radius:var(--radius-md);
-  font-size:13.5px;color:#494949;font-weight:450;letter-spacing:-.01em;
+  margin:1px 0 1px 8px;padding:7px 10px;border-radius:var(--radius-md);
+  font-size:13.5px;color:rgba(0,0,0,.8);font-weight:450;letter-spacing:-.01em;
   cursor:pointer;position:relative;transition:background .12s,color .12s;
-  border-left:1px solid var(--border);border-radius:0 var(--radius-md) var(--radius-md) 0;
 }
-.nav-item:hover{background:var(--muted);color:var(--foreground);}
-.nav-item.active{background:var(--accent);color:var(--primary);font-weight:600;border-left:2px solid var(--primary);}
+.nav-item:hover{background:rgba(0,0,0,.04);color:var(--foreground);}
+.nav-item.active{background:var(--sidebar-primary-accent);color:var(--primary);font-weight:500;}
 .subgroup-label{
   font-size:10.5px;font-weight:700;color:#9a9a9a;letter-spacing:.06em;text-transform:uppercase;
   padding:12px 10px 4px 24px;
@@ -512,40 +512,32 @@ const NAV = [
     {id:"elevation", name:"Elevation"},
     {id:"iconography", name:"Iconography"},
   ]},
-  { label:"Components", icon:'box', groups:[
-    { sub:"Actions & inputs", items:[
-      {id:"button", name:"Button"},
-      {id:"checkbox", name:"Checkbox"},
-      {id:"radio", name:"Radio"},
-      {id:"input", name:"Input"},
-      {id:"select", name:"Select"},
-      {id:"switch", name:"Switch"},
-    ]},
-    { sub:"Navigation", items:[
-      {id:"breadcrumbs", name:"Breadcrumbs"},
-      {id:"tabs", name:"Tabs"},
-      {id:"pagination", name:"Pagination"},
-    ]},
-    { sub:"Data display", items:[
+  { label:"Components", icon:'box', items:[
       {id:"accordion", name:"Accordion"},
+      {id:"alert", name:"Alert"},
       {id:"avatar", name:"Avatar"},
       {id:"badge", name:"Badge"},
+      {id:"breadcrumbs", name:"Breadcrumb"},
+      {id:"button", name:"Button"},
       {id:"card", name:"Card"},
-      {id:"table", name:"Table"},
-      {id:"tag", name:"Tag"},
-    ]},
-    { sub:"Feedback & overlay", items:[
-      {id:"alert", name:"Alert"},
+      {id:"checkbox", name:"Checkbox"},
       {id:"dialog", name:"Dialog"},
-      {id:"drawer", name:"Drawer"},
+      {id:"drawer", name:"Drawer (Sheet)"},
+      {id:"input", name:"Input"},
+      {id:"pagination", name:"Pagination"},
       {id:"popover", name:"Popover"},
       {id:"progress", name:"Progress"},
+      {id:"radio", name:"Radio Group"},
+      {id:"select", name:"Select"},
       {id:"skeleton", name:"Skeleton"},
-      {id:"toast", name:"Toast"},
+      {id:"switch", name:"Switch"},
+      {id:"table", name:"Table"},
+      {id:"tabs", name:"Tabs"},
+      {id:"tag", name:"Tag"},
+      {id:"toast", name:"Sonner (Toast)"},
       {id:"tooltip", name:"Tooltip"},
-    ]},
   ]},
-  { label:"Patterns", icon:'grid', items:[
+{ label:"Patterns", icon:'grid', items:[
     {id:"forms", name:"Forms"},
     {id:"empty-states", name:"Empty states"},
   ]},
@@ -1140,11 +1132,41 @@ function renderPrinciples(art,toc){
   toc.innerHTML = tocHTML([["p1","Clarity before cleverness"],["p2","Accessible by default"],["p3","Consistent, not uniform"],["p4","Fast to build"]]);
 }
 
+function statusBadge(st){
+  const m={
+    "Released":["var(--success-fg)","var(--success-bg)"],
+    "In Progress":["var(--info-fg)","var(--info-bg)"],
+    "In Review":["var(--warning-fg)","var(--warning-bg)"],
+    "Pending":["#525252","var(--muted)"],
+  }[st]||["#525252","var(--muted)"];
+  return '<span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 10px;border-radius:100px;font-size:12px;font-weight:600;color:'+m[0]+';background:'+m[1]+'"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>'+st+'</span>';
+}
 function renderChangelog(art,toc){
-  art.innerHTML = crumbsHTML(["Home","Getting started","What’s new"]) +
-    '<h1 class="page-title">What’s new</h1>' +
-    '<p class="lede">Release notes for the DS 2.0 documentation and libraries.</p>' +
+  const JIRA="https://accolade.atlassian.net/jira/software/projects/DS/boards";
+  const roadmap=[
+    ["Data Table","Jul 16, 2026","In Progress"],
+    ["Combobox","Jul 10, 2026","In Review"],
+    ["Date Picker","Jul 2, 2026","Pending"],
+    ["Command (⌘K)","Jun 28, 2026","Pending"],
+    ["Dialog","Jun 19, 2026","Released"],
+    ["Breadcrumb","Jun 18, 2026","Released"],
+  ];
+  const jiraIcon='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 2 3 10.5a1 1 0 0 0 0 1.4L11.5 20l3-3-6-6 6-6-3-3zm4 4-3 3 6 6-6 6 3 3 8.5-8.5a1 1 0 0 0 0-1.4L15.5 6z"/></svg>';
+  const plusIcon='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+  art.innerHTML = crumbsHTML(["Home","Getting started","What\u2019s new"]) +
+    '<h1 class="page-title">What\u2019s new</h1>' +
+    '<p class="lede">Release notes, the component roadmap, and where to file work for Accolade DS 2.0.</p>' +
     metaRowHTML(PAGE_META.changelog.updated) +
+    '<div class="hero-cta" style="margin:20px 0 4px">' +
+      '<a class="acc-btn acc-btn--primary" href="'+JIRA+'" target="_blank" rel="noopener">'+jiraIcon+'Open in Jira</a>' +
+      '<a class="acc-btn acc-btn--outline" href="'+JIRA+'/create" target="_blank" rel="noopener">'+plusIcon+'Request a component</a>' +
+    '</div>' +
+    '<h2 id="roadmap">Roadmap &amp; status</h2>' +
+    '<p class="section-sub">Live status of components in the pipeline. Statuses mirror the DS board in Jira.</p>' +
+    '<table class="props"><thead><tr><th>Component</th><th>Updated</th><th>Status</th></tr></thead><tbody>' +
+    roadmap.map(function(r){return '<tr><td style="font-weight:550">'+r[0]+'</td><td style="white-space:nowrap;color:var(--muted-foreground);font-family:var(--mono);font-size:12.5px">'+r[1]+'</td><td>'+statusBadge(r[2])+'</td></tr>';}).join('') +
+    '</tbody></table>' +
+    '<h2 id="releases">Release notes</h2>' +
     '<h2 id="jul">July 2026</h2><table class="props"><tbody><tr><td style="white-space:nowrap;font-weight:600">Jul 14</td><td>Colors rebuilt from the Figma library: six 11-step families (Brand, Neutral, Error, Warning, Information, Success) with WCAG 2.1 / APCA contrast audits.</td></tr><tr><td style="white-space:nowrap;font-weight:600">Jul 12</td><td>Documentation restructured: collapsible navigation, per-page last-updated stamps, zeroheight-style do/don\u2019t guidance.</td></tr></tbody></table><h2 id="sep">June 2026</h2>' +
     '<table class="props"><tbody>' +
     '<tr><td style="white-space:nowrap;font-weight:600">Jun 24</td><td>Button guidance updated: tertiary style is now the documented treatment for dismissive actions like Cancel.</td></tr>' +
@@ -1158,7 +1180,7 @@ function renderChangelog(art,toc){
     '<tr><td style="white-space:nowrap;font-weight:600">May 21</td><td>Alert semantic variants aligned with mode tokens.</td></tr>' +
     '<tr><td style="white-space:nowrap;font-weight:600">May 6</td><td>Avatar fallback chain (photo → initials → icon) standardized.</td></tr>' +
     '</tbody></table>';
-  toc.innerHTML = tocHTML([["jul","July 2026"],["sep","June 2026"],["aug","May 2026"]]);
+  toc.innerHTML = tocHTML([["roadmap","Roadmap & status"],["releases","Release notes"]]);
 }
 
 /* ---------- Foundations ---------- */
