@@ -9,7 +9,7 @@ import { watch } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
 
 const ROOT = new URL('.', import.meta.url).pathname;
-const PORT = Number(process.argv[process.argv.indexOf('--port') + 1]) || Number(process.env.PORT) || 3000;
+const PORT = Number(process.argv[process.argv.indexOf('--port') + 1]) || Number(process.env.PORT) || 5173;
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
