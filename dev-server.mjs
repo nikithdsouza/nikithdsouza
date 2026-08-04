@@ -7,8 +7,11 @@ import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { watch } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = new URL('.', import.meta.url).pathname;
+// fileURLToPath (not .pathname) so paths with spaces — "/Users/me/My Projects/…" —
+// and Windows drive letters resolve correctly.
+const ROOT = fileURLToPath(new URL('.', import.meta.url));
 const PORT = Number(process.argv[process.argv.indexOf('--port') + 1]) || Number(process.env.PORT) || 5173;
 
 const MIME = {
@@ -76,21 +79,41 @@ const server = createServer(async (req, res) => {
   }
 });
 
+// File watching is a nice-to-have: if the OS refuses a recursive watch
+// (older Linux, low inotify limits), serve without live reload rather than crash.
 let debounce;
-watch(ROOT, { recursive: true }, (_event, file) => {
-  if (!file || file.includes('node_modules') || file.startsWith('.git')) return;
-  if (!/\.(html|css|m?js|json|svg|png|jpe?g)$/i.test(file)) return;
-  clearTimeout(debounce);
-  debounce = setTimeout(() => {
-    console.log(`↻ ${file} changed — reloading ${sseClients.size} client(s)`);
-    for (const client of sseClients) client.write('data: reload\n\n');
-  }, 80);
-});
+try {
+  watch(ROOT, { recursive: true }, (_event, file) => {
+    if (!file || file.includes('node_modules') || file.startsWith('.git')) return;
+    if (!/\.(html|css|m?js|json|svg|png|jpe?g)$/i.test(file)) return;
+    clearTimeout(debounce);
+    debounce = setTimeout(() => {
+      console.log(`↻ ${file} changed — reloading ${sseClients.size} client(s)`);
+      for (const client of sseClients) client.write('data: reload\n\n');
+    }, 80);
+  });
+} catch (err) {
+  console.warn(`⚠ Live reload disabled (${err.code || err.message}). Serving files normally.`);
+}
 
-server.listen(PORT, () => {
-  console.log(`Dev server running:
-  → http://localhost:${PORT}/accolade-design-system.html  (Accolade Design System)
-  → http://localhost:${PORT}/index.html                   (Artemis case study)
+// If the port is busy, step to the next one instead of dying with a stack trace.
+function start(port, attempt = 0) {
+  server.once('error', (err) => {
+    if (err.code === 'EADDRINUSE' && attempt < 10) {
+      console.log(`Port ${port} is in use — trying ${port + 1}…`);
+      start(port + 1, attempt + 1);
+    } else {
+      console.error(`Could not start the dev server: ${err.message}`);
+      process.exit(1);
+    }
+  });
+  server.listen(port, () => {
+    console.log(`Dev server running:
+  → http://localhost:${port}/accolade-design-system.html  (Accolade Design System)
+  → http://localhost:${port}/index.html                   (Artemis case study)
 
-Live reload is on — edit any .html/.css/.js file and the browser refreshes.`);
-});
+Live reload is on — edit any .html/.css/.js file and the browser refreshes.
+Press Ctrl+C to stop.`);
+  });
+}
+start(PORT);
